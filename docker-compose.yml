@@ -39,6 +39,7 @@ services:
     working_dir: /var/www/html
     volumes: # carpeta de proyecto local : carpeta del container que da vida a los archivos PHP
       - ./:/var/www/html
+    user: "www-data"
     env_file:
     - ${HOME}/environments/ceresyo-env/.env
     networks:
