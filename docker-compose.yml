@@ -1,0 +1,49 @@
+version: "3.7" # version del docker-compose(?)
+services:
+  nginx: # 1er servicio: nginx
+    image: nginx:1.23-alpine # imagen de docker hub que vamos a usar
+    container_name: ceresyo-server-container # nombre para referirse al servicio
+    ports:
+      - 8081:80 # puerto de mi pc:puerto del servicio
+    volumes:
+      - ./:/var/www/html # carpeta local/ vincula a carpeta de nginx
+      - ./nginx:/etc/nginx/conf.d/ # archivo local / reflejado en archivo de la imagen
+    depends_on: # para correr este servicio debe estar corriendo php y mysql antes
+      - app
+      # - mariadb
+    networks: # la red que los conecta se llama NetCeresYo
+      - NetCeresYo
+
+  # mariadb: # 2do servicio
+  #   image: mariadb:10.9 # imagen de docker hub
+  #   container_name: ceresyo-mysql # nombre de referencia del servicio
+  #   restart: unless-stopped # si tiene algun problema, reinicialo
+  #   ports:
+  #     - 33069:3306 # puerto local:puerto del servicio
+  #   volumes:
+  #     - ./mysql:/var/lib/mysql # carpeta local:carpeta de config de mysql
+  #   environment: # datos de configuracion del entorno
+  #     MYSQL_DATABASE: $DB_DATABASE # importante que tengan comillas
+  #     MYSQL_USER: $DB_USERNAME
+  #     MYSQL_PASSWORD: $DB_PASSWORD
+  #     MYSQL_ROOT_PASSWORD: $DB_PASSWORD
+  #   networks:
+  #     - NetCeresYo # red que los conecta
+
+  app: # 3er servicio
+    build: #este se construira aqui mismo
+      context: ./ # ruta de referencia ./
+      dockerfile: Dockerfile # nombre del archivo de configuracion de la imagen
+    container_name: ceresyo-app-container #
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes: # carpeta de proyecto local : carpeta del container que da vida a los archivos PHP
+      - ./:/var/www/html
+    env_file:
+    - ${HOME}/environments/ceresyo-env/.env
+    networks:
+      - NetCeresYo # red
+
+networks: # declaracion de la red
+  NetCeresYo:
+    driver: bridge
