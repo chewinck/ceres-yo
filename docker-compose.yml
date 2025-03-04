@@ -10,27 +10,10 @@ services:
       - ./nginx:/etc/nginx/conf.d/ # archivo local / reflejado en archivo de la imagen
     depends_on: # para correr este servicio debe estar corriendo php y mysql antes
       - app
-      # - mariadb
     networks: # la red que los conecta se llama NetCeresYo
       - NetCeresYo
 
-  # mariadb: # 2do servicio
-  #   image: mariadb:10.9 # imagen de docker hub
-  #   container_name: ceresyo-mysql # nombre de referencia del servicio
-  #   restart: unless-stopped # si tiene algun problema, reinicialo
-  #   ports:
-  #     - 33069:3306 # puerto local:puerto del servicio
-  #   volumes:
-  #     - ./mysql:/var/lib/mysql # carpeta local:carpeta de config de mysql
-  #   environment: # datos de configuracion del entorno
-  #     MYSQL_DATABASE: $DB_DATABASE # importante que tengan comillas
-  #     MYSQL_USER: $DB_USERNAME
-  #     MYSQL_PASSWORD: $DB_PASSWORD
-  #     MYSQL_ROOT_PASSWORD: $DB_PASSWORD
-  #   networks:
-  #     - NetCeresYo # red que los conecta
-
-  app: # 3er servicio
+  app: # 2do servicio
     build: #este se construira aqui mismo
       context: ./ # ruta de referencia ./
       dockerfile: Dockerfile # nombre del archivo de configuracion de la imagen
