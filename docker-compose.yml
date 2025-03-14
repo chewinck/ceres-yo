@@ -30,4 +30,4 @@ services:
 
 networks: # declaracion de la red
   NetCeresYo:
-    driver: bridge
+    driver: bridge 
