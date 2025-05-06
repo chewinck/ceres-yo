@@ -12,16 +12,20 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('ciudadanos_tables', function (Blueprint $table) {
-            $table->id();
+        
+            $table->unsignedBigInteger('id')->primary();
             $table->string('nacionalidad');
-            $table->string('tipo_identificacion');
-            $table->string('numero_identificacion');
-            $table->string('fecha_expedicion');
-            $table->string('telefono');
-            $table->string('tipo_direccion');
-            $table->string('barrio');
-            $table->string('direccion');
+            $table->enum('tipo_identificacion'.['CC','CE','PA','DE','PEP','PPT'])->default('CC');
+            $table->string('numero_identificacion',20)->unique();
+            $table->date('fecha_expedicion');
+            $table->string('telefono',15);
+            $table->string('tipo_direccion',15);
+            $table->string('barrio',50);
+            $table->string('direccion', 50);
             $table->timestamps();
+
+            $table->foreign('id')->references('id')->on('users')->onDelete('cascade');
+            
         });
     }
 
