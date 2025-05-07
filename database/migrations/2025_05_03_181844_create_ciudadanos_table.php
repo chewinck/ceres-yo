@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ciudadanos_tables', function (Blueprint $table) {
+        Schema::create('ciudadanos', function (Blueprint $table) {
         
             $table->unsignedBigInteger('id')->primary();
             $table->string('nacionalidad');
-            $table->enum('tipo_identificacion'.['CC','CE','PA','DE','PEP','PPT'])->default('CC');
+            $table->enum('tipo_identificacion',['CC','CE','PA','DE','PEP','PPT'])->default('CC');
             $table->string('numero_identificacion',20)->unique();
             $table->date('fecha_expedicion');
             $table->string('telefono',15);

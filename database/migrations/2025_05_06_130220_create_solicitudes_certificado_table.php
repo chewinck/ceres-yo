@@ -19,7 +19,7 @@ return new class extends Migration
             $table->date('fecha_emision_certificado');
             $table->enum('tipo_solicitud',['automatica', 'exepcional'])->default('automatica');
             $table->enum('tipo_certificado', ['EVE','PPL','PEPA','TAPEP']);
-            $table->enum('estado',['iniciada','rechazada','exitosa'])->default('pendiente');
+            $table->enum('estado',['iniciada','rechazada','exitosa'])->default('iniciada');
             $table->string('requisito')->nullable();
             $table->string('plantilla_certificado', 80);
             $table->json('informacion_adicional');
