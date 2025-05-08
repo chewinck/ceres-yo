@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('ciudadanos', function (Blueprint $table) {
         
             $table->unsignedBigInteger('id')->primary();
-            $table->string('nacionalidad');
+            $table->string('nacionalidad', 30);
             $table->enum('tipo_identificacion',['CC','CE','PA','DE','PEP','PPT'])->default('CC');
             $table->string('numero_identificacion',20)->unique();
             $table->date('fecha_expedicion');
