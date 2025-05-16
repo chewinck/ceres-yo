@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('ciudadanos', function (Blueprint $table) {
         
             $table->unsignedBigInteger('id')->primary();
-            $table->string('nacionalidad', 30);
+            $table->enum('nacionalidad',['Colombiana','Extranjera']);
             $table->enum('tipo_identificacion',['CC','CE','PA','DE','PEP','PPT'])->default('CC');
             $table->string('numero_identificacion',20)->unique();
             $table->date('fecha_expedicion');
             $table->string('telefono',15);
-            $table->string('tipo_direccion',15);
+            $table->enum('tipo_direccion',['Rural','Urbana'])->default('Urbana');
             $table->string('barrio',50);
             $table->string('direccion', 50);
             $table->timestamps();

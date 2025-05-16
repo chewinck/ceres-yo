@@ -4,20 +4,26 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-        <div >
+         <div >
             <x-input-label for="nacionalidad" :value="__('Nacionalidad')" />
-            <x-text-input id="nacionalidad" class="block mt-1 w-full" type="text" name="nacionalidad" :value="old('nacionalidad')" required autocomplete="nacionalidad" />
+            <select id="nacionalidad" class="w-full text-sm text-gray-500 italic rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" name="nacionalidad" required>
+                <option value="">-- Seleccione nacionalidad --</option>
+                <option value="Colombiana" {{ old('nacionalidad') == 'Colombiana' ? 'selected' : '' }}>Colombiana</option>
+                <option value="Extranjera" {{ old('nacionalidad') == 'Extranjera' ? 'selected' : '' }}>Extranjera</option>
+            </select>
             <x-input-error :messages="$errors->get('nacionalidad')" class="mt-2" />
         </div>
 
         <div >
             <x-input-label for="tipoIdentificacion" :value="__('Tipo de Identificación')" />
-            <select id="tipoIdentificacion" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" name="tipoIdentificacion" required>
+            <select id="tipoIdentificacion" class="w-full text-sm text-gray-500 italic rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" name="tipoIdentificacion" required>
                 <option value="">-- Seleccione tipo de Identificación --</option>
                 <option value="CC" {{ old('tipoIdentificacion') == 'CC' ? 'selected' : '' }}>Cédula de Ciudadanía</option>
                 <option value="CE" {{ old('tipoIdentificacion') == 'CE' ? 'selected' : '' }}>Cédula de Extranjería</option>
-                <option value="DE" {{ old('tipoIdentificacion') == 'DE' ? 'selected' : '' }}>Documento Extranjero</option>
                 <option value="PA" {{ old('tipoIdentificacion') == 'PA' ? 'selected' : '' }}>Pasaporte</option>
+                <option value="DE" {{ old('tipoIdentificacion') == 'DE' ? 'selected' : '' }}>Documento Extranjero</option>
+                <option value="RC" {{ old('tipoIdentificacion') == 'RC' ? 'selected' : '' }}>Registro civil de nacimiento</option>
+                <option value="TI" {{ old('tipoIdentificacion') == 'TI' ? 'selected' : '' }}>Tarjeta de Identidad</option>
                 <option value="PEP" {{ old('tipoIdentificacion') == 'PEP' ? 'selected' : '' }}>Permiso especial de permanencia</option>
                 <option value="PPT" {{ old('tipoIdentificacion') == 'PPT' ? 'selected' : '' }}>Permiso por protección Temporal</option>
             </select>
@@ -52,15 +58,21 @@
             <x-input-label :value="__('Tipo de Dirección')" />
             <div class="md:col-span-2">
                 <div>
-                    <input id="direccion_residencial" type="radio" name="tipoDireccion" value="residencial" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300" {{ old('tipoDireccion') == 'residencial' ? 'checked' : '' }}>
-                    <label for="direccion_residencial" class="ml-2 text-sm text-gray-700">{{ __('Urbana') }}</label>
+                    <input id="direccionUrbana" type="radio" name="tipoDireccion" value="Urbana" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300" {{ old('tipoDireccion') == 'Urbana' ? 'checked' : '' }}>
+                    <label for="direccionUrbana" class="ml-2 text-sm text-gray-700">{{ __('Urbana') }}</label>
                 </div>
                 <div>
-                    <input id="direccion_comercial" type="radio" name="tipoDireccion" value="comercial" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300" {{ old('tipoDireccion') == 'comercial' ? 'checked' : '' }}>
-                    <label for="direccion_comercial" class="ml-2 text-sm text-gray-700">{{ __('Rural') }}</label>
+                    <input id="direccionRural" type="radio" name="tipoDireccion" value="Rural" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300" {{ old('Rural') == 'Rural' ? 'checked' : '' }}>
+                    <label for="direccionRural" class="ml-2 text-sm text-gray-700">{{ __('Rural') }}</label>
                 </div>
             </div>
             <x-input-error :messages="$errors->get('tipoDireccion')" class="mt-2" />
+        </div>
+
+        <div>
+            <x-input-label for="barrio" :value="__('Barrio')" />
+            <x-text-input id="barrio" class="block mt-1 w-full" type="text" name="barrio" :value="old('barrio')" required autocomplete="barrio" />
+            <x-input-error :messages="$errors->get('barrio')" class="mt-2" />
         </div>
 
         <div>

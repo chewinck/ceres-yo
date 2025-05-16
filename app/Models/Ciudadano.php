@@ -11,8 +11,12 @@ class Ciudadano extends Model
     protected $table = 'ciudadanos';
     protected $primaryKey = 'id';
 
+    public $incrementing = false;
+    protected $keyType = 'unsignedBigInteger';
+
 
     protected $fillable = [
+        'id',
         'nacionalidad',
         'tipo_identificacion',
         'numero_identificacion',
