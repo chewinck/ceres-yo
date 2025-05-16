@@ -15,7 +15,7 @@ return new class extends Migration
         
             $table->unsignedBigInteger('id')->primary();
             $table->enum('nacionalidad',['Colombiana','Extranjera']);
-            $table->enum('tipo_identificacion',['CC','CE','PA','DE','PEP','PPT'])->default('CC');
+            $table->enum('tipo_identificacion',['CC','CE','PA','DE','RC','TI','PEP','PPT'])->default('CC');
             $table->string('numero_identificacion',20)->unique();
             $table->date('fecha_expedicion');
             $table->string('telefono',15);
