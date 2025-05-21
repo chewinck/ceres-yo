@@ -41,7 +41,7 @@ public function store(Request $request): RedirectResponse
             $request->validate([
                 'nacionalidad' => ['required', 'string', 'max:30'],
                 'tipoIdentificacion' => ['required', 'string', 'max:5', 'in:CC,CE,PA,DE,RC,TI,PEP,PPT'],
-                'numeroIdentificacion' => ['required', 'string', 'max:20', 'unique:ciudadanos,numero_identificacion'],
+                'numeroIdentificacion' => ['required', 'string', 'max:20', 'unique:ciudadanos,numero_identificacion', 'regex:/^[A-Za-z0-9]+$/'],
                 'fechaExpedicion' => ['required', 'date'],
                 // 'telefono' => ['required', 'string', 'max:15'],
                 'tipoDireccion' => ['required', 'string', 'max:15'],
@@ -104,6 +104,7 @@ public function store(Request $request): RedirectResponse
             'numeroIdentificacion.string' => 'El número de identificación debe ser una cadena de texto.',
             'numeroIdentificacion.max' => 'El número de identificación no puede tener más de 20 caracteres.',
             'numeroIdentificacion.unique' => 'Este número de identificación ya está registrado.',
+            'numeroIdentificacion.regex' => 'El número de documento no debe contener puntos, comas ni espacios.',
 
             'fechaExpedicion.required' => 'La fecha de expedición es obligatoria.',
             'fechaExpedicion.date' => 'La fecha de expedición debe ser una fecha válida.',
