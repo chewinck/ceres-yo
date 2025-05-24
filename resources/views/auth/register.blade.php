@@ -15,7 +15,7 @@
 
     <div class=" bg-brandBlue flex flex-col justify-center  sm:px-6 lg:px-8">
         <div class="sm:mx-auto sm:w-full sm:max-w-4xl">
-            <div class=" bg-brandBlue py-8 px-6 shadow rounded-2xl sm:px-10">
+            <div class=" bg-brandBlue py-2 px-2 shadow rounded-2xl sm:px-2">
                 <form method="POST" action="{{ route('register') }}" class="space-y-6">
                     @csrf
 
@@ -143,22 +143,9 @@
                             <x-input-error :messages="$errors->get('email')" class="mt-2" />
                         </div>
 
-                        {{-- Contraseña --}}
-                        <div>
-                            <x-input-label for="password" :value="__('Contraseña *')" />
-                            <x-text-input id="password" name="password" type="password" 
-                                class="block mt-1 w-full text-black" autocomplete="new-password" />
-                            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-                        </div>
+                       <x-password-input id="password" name="password" label="Contraseña *" />
+                       <x-password-input id="password_confirmation" name="password_confirmation" label="Confirmar contraseña *" />
 
-                        {{-- Confirmar Contraseña --}}
-                        <div>
-                            <x-input-label for="password_confirmation" :value="__('Confirmar contraseña *')" />
-                            <x-text-input id="password_confirmation" name="password_confirmation" type="password" 
-                                class="block mt-1 w-full text-black" autocomplete="new-password" />
-                            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-                        </div>
-                    </div>
 
                     {{-- Acciones --}}
                     <div class="md:col-span-2 flex items-center justify-end">

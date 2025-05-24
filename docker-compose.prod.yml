@@ -1,0 +1,34 @@
+version: "3.7" # versión del docker-compose
+
+services:
+  nginx: # 1er servicio: nginx
+    image: nginx:1.23-alpine
+    container_name: ceresyo-server-container
+    ports:
+      - 8081:80 # puerto de mi PC : puerto del contenedor
+    volumes:
+      - ./:/var/www/html
+      - ./nginx:/etc/nginx/conf.d/
+    depends_on:
+      - app
+    networks:
+      - NetCeresYo
+
+  app: # 2do servicio: PHP-FPM
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: ceresyo-app-container
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    user: "www-data"
+    env_file:
+      - ${HOME}/environments/ceresyo-env/.env
+    networks:
+      - NetCeresYo
+
+networks: # definición de redes
+  NetCeresYo:
+    driver: bridge

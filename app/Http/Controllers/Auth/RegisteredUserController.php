@@ -35,9 +35,6 @@ public function store(Request $request): RedirectResponse
 {
 
     try {
-
-        return DB::transaction(function () use ($request) {
-
             $request->validate([
                 'nacionalidad' => ['required', 'string', 'max:30'],
                 'tipoIdentificacion' => ['required', 'string', 'max:5', 'in:CC,CE,PA,DE,RC,TI,PEP,PPT'],
@@ -51,6 +48,9 @@ public function store(Request $request): RedirectResponse
                 'email' => ['required', 'string', 'lowercase', 'email', 'max:100', 'unique:'.User::class],
                 'password' => ['required', 'confirmed', Rules\Password::defaults()],
             ], $this->validationMessages());
+
+        return DB::transaction(function () use ($request) {
+
 
             $user = User::create([
                 'nombre' => strtoupper($request->nombre),
