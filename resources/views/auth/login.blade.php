@@ -6,12 +6,13 @@
             <div>
                 <img src="{{ asset('storage/escudo-yopal.jpg') }}" alt="Escudo de Yopal" class="w-32 h-auto mx-auto">
             </div>
+            <x-auth-session-status class="mb-2" :status="session('status')" />
+
+            <form method="POST" action="{{ route('login') }}">
+                    @csrf
 
             <div class="mt-5 flex flex-col items-center">
-                 <x-auth-session-status class="mb-2" :status="session('status')" />
-
-                <form method="POST" action="{{ route('login') }}">
-                    @csrf
+                 
                 <div class=" w-full flex-1 mt-2">
                     <div class="flex flex-col items-center mb-6">
                          <h1
@@ -63,8 +64,9 @@
                             </x-primary-button>
                         </div>
                 </div>
-             </form>
+             
             </div>
+            </form>
         </div>
         <div class="flex-1 bg-blue-100 text-center hidden lg:flex">
             <div class="m-12 xl:m-16 w-full bg-contain bg-center bg-no-repeat"
