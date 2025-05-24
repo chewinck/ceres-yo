@@ -27,7 +27,7 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'string', 'email'],
+            'email' => ['required', 'string', 'email','max:100'],
             'password' => ['required', 'string'],
         ];
     }
@@ -50,6 +50,19 @@ class LoginRequest extends FormRequest
         }
 
         RateLimiter::clear($this->throttleKey());
+    }
+
+        public function messages(): array
+    {
+        return [
+            'email.required' => 'El correo electrónico es obligatorio.',
+            'email.string' => 'El correo electrónico debe ser una cadena de texto.',
+            'email.email' => 'El correo electrónico debe tener un formato válido.',
+            'email.max' => 'El correo electrónico no puede tener más de 100 caracteres.',
+
+            'password.required' => 'La contraseña es obligatoria.',
+            'password.string' => 'La contraseña debe ser una cadena de texto.',
+        ];
     }
 
     /**

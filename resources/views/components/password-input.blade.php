@@ -3,7 +3,7 @@
     'name' => 'password',
     'label' => 'Contraseña',
     'required' => false,
-    'placeholder' => 'Escriba aquí',
+    'placeholder' => 'Escriba la contraseña',
 ])
 
 <div>

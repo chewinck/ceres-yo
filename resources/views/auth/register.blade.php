@@ -1,10 +1,10 @@
 <x-guest-layout>
     
-    <div class="bg-indigo-500 p-1 rounded-xl shadow-lg">
+    <div class="bg-blue-500 p-1 rounded-xl shadow-lg">
         <div class="flex items-center">
             <!-- Icono de usuario dentro de un círculo decorativo -->
             <div class="bg-white rounded-full p-3 shadow-md">
-            <svg class="h-8 w-8 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg class="h-8 w-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 15c2.166 0 4.215.516 6.121 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
             </div>
@@ -25,9 +25,10 @@
                             <x-input-label for="nacionalidad" :value="__('Nacionalidad *')" />
 
                                 <select id="nacionalidad" name="nacionalidad"
-                                    class="w-full mt-1 text-black border border-gray-300 rounded-md shadow-sm 
-                                        hover:border-indigo-500 focus:border-indigo-600 focus:ring-indigo-600 
-                                        focus:text-indigo-700 focus:outline-none transition duration-150 ease-in-out">
+                                    class="w-full mt-1 text-black border border-gray-300 rounded-md shadow-sm
+                                        hover:border-blue-500 hover:text-blue-700
+                                        focus:border-blue-600 focus:ring focus:ring-blue-200 focus:outline-none
+                                        transition duration-150 ease-in-out">
                                     <option value="" disabled {{ old('nacionalidad') ? '' : 'selected' }}>Selecciona</option>
                                     <option value="Colombiana" {{ old('nacionalidad') == 'Colombiana' ? 'selected' : '' }}>Colombiana</option>
                                     <option value="Extranjera" {{ old('nacionalidad') == 'Extranjera' ? 'selected' : '' }}>Extranjera</option>
@@ -42,7 +43,10 @@
                         <div>
                             <x-input-label for="tipoIdentificacion" :value="__('Tipo de Identificación *')" />
                             <select id="tipoIdentificacion" name="tipoIdentificacion" 
-                                class="w-full mt-1 text-black border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                class="w-full mt-1 text-black border border-gray-300 rounded-md shadow-sm
+                                        hover:border-blue-500 hover:text-blue-700
+                                        focus:border-blue-600 focus:ring focus:ring-blue-200 focus:outline-none
+                                        transition duration-150 ease-in-out">
                                 <option value="" disabled {{ old('tipoIdentificacion') ? '' : 'selected' }}>Selecciona</option>
                                 @foreach ([
                                     'CC' => 'Cédula de Ciudadanía',
@@ -102,13 +106,13 @@
                             <div class="mt-2 flex gap-4">
                                 <label class="inline-flex items-center">
                                     <input type="radio" name="tipoDireccion" value="Urbana" 
-                                        class="text-indigo-600 border-gray-300 focus:ring-indigo-500"
+                                        class="text-blue-600 border-gray-300 focus:ring-blue-500"
                                         {{ old('tipoDireccion') == 'Urbana' ? 'checked' : '' }}>
                                     <span class="ml-2 text-black text-sm">Urbana</span>
                                 </label>
                                 <label class="inline-flex items-center">
                                     <input type="radio" name="tipoDireccion" value="Rural" 
-                                        class="text-indigo-600 border-gray-300 focus:ring-indigo-500"
+                                        class="text-blue-600 border-gray-300 focus:ring-blue-500"
                                         {{ old('tipoDireccion') == 'Rural' ? 'checked' : '' }}>
                                     <span class="ml-2 text-black text-sm">Rural</span>
                                 </label>
@@ -149,7 +153,7 @@
 
                     {{-- Acciones --}}
                     <div class="md:col-span-2 flex items-center justify-end">
-                        <a href="{{ route('login') }}" class="text-sm  mb-2  text-indigo-600 hover:underline">¿Ya tiene una cuenta?</a>
+                        <a href="{{ route('login') }}" class="text-sm  mb-2  text-blue-600 hover:underline">¿Ya tiene una cuenta?</a>
                         <x-primary-button class="ml-4 px-6 py-2 mb-2 ">
                             Registrarme
                         </x-primary-button>
