@@ -8,6 +8,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
+use App\Models\Ciudadano;
+use Illuminate\Support\Facades\Log;
 
 class ProfileController extends Controller
 {
@@ -24,18 +28,61 @@ class ProfileController extends Controller
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
-    {
-        $request->user()->fill($request->validated());
+    // public function update(ProfileUpdateRequest $request): RedirectResponse
+    // {
+    //     $request->user()->fill($request->validated());
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+    //     if ($request->user()->isDirty('email')) {
+    //         $request->user()->email_verified_at = null;
+    //     }
+
+    //     $request->user()->save();
+
+    //     return Redirect::route('profile.edit')->with('status', 'profile-updated');
+    // }
+
+        public function update(ProfileUpdateRequest $request): RedirectResponse
+    {
+        $user = $request->user();
+        $user->fill($request->validated());
+
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
         }
 
-        $request->user()->save();
+        try {
+            DB::transaction(function () use ($user, $request) {
+                // Guardar datos del usuario
+                $user->save();
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+                // Guardar o actualizar datos del ciudadano
+                Ciudadano::updateOrCreate(
+                    ['id' => $user->id], // clave primaria
+                    [
+                        'nacionalidad' => $request->nacionalidad,
+                        'tipo_identificacion' => $request->tipoIdentificacion,
+                        'numero_identificacion' => $request->numeroIdentificacion,
+                        'fecha_expedicion' => $request->fechaExpedicion,
+                        'telefono' => $request->telefono,
+                        'tipo_direccion' => $request->tipoDireccion,
+                        'barrio' => $request->barrio,
+                        'direccion' => $request->direccion,
+                    ]
+                );
+            });
+
+            return redirect()->route('profile.edit')->with('status', 'profile-updated');
+
+        } catch (ValidationException $e) {
+            Log::error('Errores de validación:', $e->errors());
+            return redirect()->back()->withErrors($e->errors())->withInput();
+
+        } catch (\Exception $e) {
+            Log::error('Error general:', ['message' => $e->getMessage()]);
+            return redirect()->back()->with('error', 'Ocurrió un error al guardar.');
+        }
     }
+
 
     /**
      * Delete the user's account.

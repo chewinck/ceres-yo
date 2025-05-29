@@ -26,7 +26,7 @@
                     <div class="mx-auto max-w-xs ">
                         <div class="mb-6">
                             <x-input-label for="email" :value="__('Correo electrónico *')" />
-                            <x-text-input id="email" class="w-full px-8 py-4 font-medium bg-brandBlue text-sm " type="email" name="email" :value="old('email')"  autofocus autocomplete="username"  placeholder="Ejemplo: usuario@correo.com"/>
+                            <x-text-input id="email" class="w-full px-8 py-4 font-medium bg-brandBlue  " type="email" name="email" :value="old('email')"  autofocus autocomplete="username"  placeholder="Ejemplo: usuario@correo.com"/>
                             <x-input-error :messages="$errors->get('email')" class="mt-2" />
                         </div>
                         <x-password-input class="w-full px-8 py-4 font-medium bg-brandBlue" id="password" name="password" label="Contraseña *" />
