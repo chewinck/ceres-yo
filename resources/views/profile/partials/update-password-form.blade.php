@@ -1,4 +1,25 @@
 <section>
+               @if (session('status'))
+                    @php
+                        $alertClasses = session('status') === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
+                        $message = session('message') ?? (session('status') === 'success' ? 'Nueva contraseña guardado con éxito.' : 'Hubo un error al guardar la nueva contraseña.');
+                    @endphp
+
+                    <div
+                        x-data="{ show: true }"
+                        x-show="show"
+                        x-transition
+                        class="flex items-center justify-between p-2 rounded-md text-sm {{ $alertClasses }}"
+                    >
+                        <span>{{ $message }}</span>
+                        <button
+                            @click="show = false"
+                            class="ml-2 font-bold"
+                        >
+                            &times;
+                        </button>
+                    </div>
+                @endif
     <header>
         <h2 class="text-lg font-medium text-blue-900">
             {{ __('Actualizar contraseña') }}
@@ -34,15 +55,9 @@
         <div class="flex items-center gap-4 justify-end">
             <x-primary-button>{{ __('Guardar') }}</x-primary-button>
 
-            @if (session('status') === 'password-updated')
-                <p
-                    x-data="{ show: true }"
-                    x-show="show"
-                    x-transition
-                    x-init="setTimeout(() => show = false, 2000)"
-                    class="text-sm text-gray-600"
-                >{{ __('Saved.') }}</p>
-            @endif
+
+
+
         </div>
     </form>
 </section>

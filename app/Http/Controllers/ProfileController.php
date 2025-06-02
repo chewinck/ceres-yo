@@ -71,7 +71,10 @@ class ProfileController extends Controller
                 );
             });
 
-            return redirect()->route('profile.edit')->with('status', 'profile-updated');
+            return redirect()->route('profile.edit')->with([
+            'status' => 'success',
+            'message' => '¡Información actualizada con éxito!'
+        ]);
 
         } catch (ValidationException $e) {
             Log::error('Errores de validación:', $e->errors());
