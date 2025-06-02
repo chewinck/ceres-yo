@@ -1,7 +1,7 @@
 <x-guest-layout>
     <div class="flex flex-col sm:justify-center items-center pt-4 sm:pt-0">
         <div class="max-w-md mx-auto bg-white sm:rounded-lg px-6 py-4">
-             <div>
+            <div>
                 <img src="{{ asset('storage/escudo-yopal.jpg') }}" alt="Escudo de Yopal" class="w-32 h-auto mx-auto">
             </div>
             <div class="flex flex-col items-center mb-6">
@@ -21,7 +21,9 @@
 
                 <div class="mb-6">
                     <x-input-label for="email" :value="__('Correo electrónico *')" />
-                    <x-text-input id="email" class="w-full px-8 py-4 font-medium bg-brandBlue text-sm " type="email" name="email" :value="old('email')"  autofocus autocomplete="username"  placeholder="Ejemplo: usuario@correo.com"/>
+                    <x-text-input id="email" class="w-full px-8 py-4 font-medium bg-brandBlue text-sm "
+                        type="email" name="email" :value="old('email')" autofocus autocomplete="username"
+                        placeholder="Ejemplo: usuario@correo.com" />
                     <x-input-error :messages="$errors->get('email')" class="mt-2" />
                 </div>
 

@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use App\Models\Ciudadano;
 use Illuminate\Support\Facades\Log; // Importa la clase Log
+use Illuminate\Support\Facades\Http;
 
 class LoginRequest extends FormRequest
 {
@@ -29,6 +30,7 @@ class LoginRequest extends FormRequest
         public function rules(): array
         {
             return [
+                'g-recaptcha-response' => 'required',
                 'email' => [
                     'required',
                     'string',
@@ -44,11 +46,36 @@ class LoginRequest extends FormRequest
                                 $fail('El número de documento no es válido.');
                             }
                         }
-                    },
+                    },  
                 ],
                 'password' => ['required', 'string', 'min:8'], // u otro mínimo de seguridad
             ];
         }
+
+          /**
+     * Verifica el reCAPTCHA después de las validaciones iniciales.
+     */
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            if ($this->has('g-recaptcha-response')) {
+                try {
+                    $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+                        'secret' => env('RECAPTCHA_SECRET_KEY'),
+                        'response' => $this->input('g-recaptcha-response'),
+                        'remoteip' => $this->ip(),
+                    ]);
+
+                    if (! $response->json()['success']) {
+                        $validator->errors()->add('g-recaptcha-response', 'La verificación del reCAPTCHA ha fallado.');
+                    }
+                } catch (\Exception $e) {
+                    Log::error('Error al verificar reCAPTCHA: '.$e->getMessage());
+                    $validator->errors()->add('g-recaptcha-response', 'No se pudo verificar el reCAPTCHA.');
+                }
+            }
+        });
+    }
 
 
     /**
@@ -111,6 +138,7 @@ class LoginRequest extends FormRequest
         public function messages(): array
     {
         return [
+            'g-recaptcha-response.required' => 'El reCAPTCHA es obligatorio.',
             'email.required' => 'El correo electrónico es obligatorio.',
             'email.string' => 'El correo electrónico debe ser una cadena de texto.',
             'email.email' => 'El correo electrónico debe tener un formato válido.',

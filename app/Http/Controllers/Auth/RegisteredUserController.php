@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Services\RecaptchaService;
 USE App\Models\Ciudadano;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -36,6 +37,7 @@ public function store(Request $request): RedirectResponse
 
     try {
             $request->validate([
+                'g-recaptcha-response' => 'required',
                 'nacionalidad' => ['required', 'string', 'max:30'],
                 'tipoIdentificacion' => ['required', 'string', 'max:5', 'in:CC,CE,PA,DE,RC,TI,PEP,PPT'],
                 'numeroIdentificacion' => ['required', 'string', 'max:20', 'unique:ciudadanos,numero_identificacion', 'regex:/^[A-Za-z0-9]+$/'],
@@ -49,7 +51,12 @@ public function store(Request $request): RedirectResponse
                 'password' => ['required', 'confirmed', Rules\Password::defaults()],
             ], $this->validationMessages());
 
-        return DB::transaction(function () use ($request) {
+            $token = $request->input('g-recaptcha-response');
+            if (!RecaptchaService::validate($token)) {
+                return redirect()->back()->withErrors(['captcha' => 'Captcha inválido, intenta de nuevo.'])->withInput();
+            }
+
+            return DB::transaction(function () use ($request) {
 
 
             $user = User::create([
@@ -91,6 +98,7 @@ public function store(Request $request): RedirectResponse
     protected function validationMessages()
     {
         return [
+            'g-recaptcha-response.required' => 'La verificación captcha es obligatoria.',
             'nacionalidad.required' => 'La nacionalidad es obligatoria.',
             'nacionalidad.string' => 'La nacionalidad debe ser una cadena de texto.',
             'nacionalidad.max' => 'La nacionalidad no puede tener más de 30 caracteres.',
