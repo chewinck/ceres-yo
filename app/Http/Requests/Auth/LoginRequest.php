@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use App\Models\Ciudadano;
+use Illuminate\Support\Facades\Log; // Importa la clase Log
 
 class LoginRequest extends FormRequest
 {
@@ -24,33 +26,87 @@ class LoginRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
-    {
-        return [
-            'email' => ['required', 'string', 'email','max:100'],
-            'password' => ['required', 'string'],
-        ];
-    }
+        public function rules(): array
+        {
+            return [
+                'email' => [
+                    'required',
+                    'string',
+                    function ($attribute, $value, $fail) {
+                        // Si es correo electrónico, debe ser válido
+                        if (filter_var($value, FILTER_VALIDATE_EMAIL)) {
+                            if (! filter_var($value, FILTER_VALIDATE_EMAIL)) {
+                                $fail('El correo electrónico no es válido.');
+                            }
+                        } else {
+                            // Si no es correo, debe ser solo dígitos (o lo que acepte tu documento)
+                            if (! preg_match('/^\d{4,15}$/', $value)) {
+                                $fail('El número de documento no es válido.');
+                            }
+                        }
+                    },
+                ],
+                'password' => ['required', 'string', 'min:8'], // u otro mínimo de seguridad
+            ];
+        }
+
 
     /**
      * Attempt to authenticate the request's credentials.
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function authenticate(): void
+    // public function authenticate(): void
+    // {
+    //     $this->ensureIsNotRateLimited();
+
+    //     if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+    //         RateLimiter::hit($this->throttleKey());
+
+    //         throw ValidationException::withMessages([
+    //             'email' => trans('auth.failed'),
+    //         ]);
+    //     }
+
+    //     RateLimiter::clear($this->throttleKey());
+    // }
+        public function authenticate(): void
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+        $login = $this->input('email'); // el input puede ser correo o documento
+        $password = $this->input('password');
+
+        $credentials = [];
+
+        if (filter_var($login, FILTER_VALIDATE_EMAIL)) {
+            // Es correo
+            $credentials['email'] = $login;
+        } else {
+            // Es documento, buscar al usuario por número_identificacion
+            $ciudadano = Ciudadano::where('numero_identificacion', $login)->first();
+            if ($ciudadano) {
+                $credentials['id'] = $ciudadano->id; // el id es la clave primaria del user
+            } else {
+                throw ValidationException::withMessages([
+                    'email' => __('auth.failed'),
+                ]);
+            }
+        }
+
+        $credentials['password'] = $password;
+
+        if (! Auth::attempt($credentials, $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'email' => trans('auth.failed'),
+                'email' => __('auth.failed'),
             ]);
         }
 
         RateLimiter::clear($this->throttleKey());
     }
+
 
         public function messages(): array
     {

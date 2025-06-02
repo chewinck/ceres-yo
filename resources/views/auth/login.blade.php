@@ -25,8 +25,8 @@
 
                     <div class="mx-auto max-w-xs ">
                         <div class="mb-6">
-                            <x-input-label for="email" :value="__('Correo electrónico *')" />
-                            <x-text-input id="email" class="w-full px-8 py-4 font-medium bg-brandBlue  " type="email" name="email" :value="old('email')"  autofocus autocomplete="username"  placeholder="Ejemplo: usuario@correo.com"/>
+                            <x-input-label for="email" :value="__('Correo electrónico o número de documento *')" />
+                            <x-text-input id="email" class="w-full px-8 py-4 font-medium bg-brandBlue  " type="text" name="email" :value="old('email')"  autofocus autocomplete="username"  placeholder="Ejemplo: usuario@correo.com"/>
                             <x-input-error :messages="$errors->get('email')" class="mt-2" />
                         </div>
                         <x-password-input class="w-full px-8 py-4 font-medium bg-brandBlue" id="password" name="password" label="Contraseña *" />
@@ -51,7 +51,9 @@
                                 Privacy Policy
                             </a>
                         </p> --}}
-                      <div class="flex items-center justify-end gap-4 mt-9">
+                      <div class="flex justify-between gap-4 mt-9">
+                        {{-- Columna izquierda: links verticales --}}
+                        <div class="flex flex-col items-start gap-1">
                             @if (Route::has('password.request'))
                                 <a class="underline text-sm text-blue-600 hover:text-blue-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                                     href="{{ route('password.request') }}">
@@ -59,10 +61,21 @@
                                 </a>
                             @endif
 
-                            <x-primary-button class="px-6 py-2">
-                                {{ __('Ingresar') }}
-                            </x-primary-button>
+                            @if (Route::has('register'))
+                                <a class="underline text-sm text-blue-600 hover:text-blue-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                                    href="{{ route('register') }}">
+                                    {{ __('Registrarme') }}
+                                </a>
+                            @endif
                         </div>
+
+                        {{-- Botón a la derecha --}}
+                        <x-primary-button class="px-6 py-2">
+                            {{ __('Ingresar') }}
+                        </x-primary-button>
+                    </div>
+
+
                 </div>
              
             </div>
