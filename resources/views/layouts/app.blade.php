@@ -46,12 +46,12 @@
                 <nav>
                     <ul class="space-y-2">
                         <li>
-                            <a href="{{ route('dashboard') }}"
-                                class="block py-2 px-4 hover:bg-gray-700 rounded">Dashboard</a>
-                        </li>
-                        <li>
                             <a href="{{ route('profile.edit') }}"
                                 class="block py-2 px-4 hover:bg-gray-700 rounded">Editar mis datos</a>
+                        </li>
+                        <li>
+                            <a href="{{ route('dashboard') }}" class="block py-2 px-4 hover:bg-gray-700 rounded">Generar
+                                cerftificado</a>
                         </li>
                         <li>
                             <a href="{{ route('dashboard') }}"
@@ -67,13 +67,14 @@
                 <nav>
                     <ul class="space-y-2">
                         <li>
-                            <a href="{{ route('dashboard') }}"
-                                class="block py-2 px-4 hover:bg-gray-700 rounded">Dashboard</a>
-                        </li>
-                        <li>
                             <a href="{{ route('profile.edit') }}"
                                 class="block py-2 px-4 hover:bg-gray-700 rounded">Editar mis datos</a>
                         </li>
+                        <li>
+                            <a href="{{ route('dashboard') }}"
+                                class="block py-2 px-4 hover:bg-gray-700 rounded">Generar certificado</a>
+                        </li>
+
                         <li>
                             <a href="{{ route('dashboard') }}"
                                 class="block py-2 px-4 hover:bg-gray-700 rounded">Configuración</a>
