@@ -19,9 +19,16 @@ docker compose -f $compose_file down
 # Esto asume que estás copiando un nuevo archivo .env antes del deploy
 # cp ${HOME}/environments/${folder_env}/.env .env
 
+ENV_FILE="/home/adminqa/environments/ceresyo-env/.env"
+
+if [ ! -f $ENV_FILE ]; then
+    echo "❌ ERROR: No se encontró el archivo de entorno en $ENV_FILE"
+    exit 1
+fi
+
 # Levantar todo con docker-compose
 echo "Levantando aplicación con docker-compose..."
-docker compose --env-file /home/adminqa/environments/ceresyo-env/.env -f $compose_file up -d
+docker compose --env-file $ENV_FILE -f $compose_file up -d
 
 
 # (Opcional) Limpiar imágenes antiguas si deseas
