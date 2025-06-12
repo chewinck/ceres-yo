@@ -39,8 +39,6 @@ services:
         volumes:
             - ./:/var/www/html
         user: "www-data"
-        env_file:
-            - ${HOME}/environments/ceresyo-env/.env
         depends_on:
             - mariadb
         networks:
