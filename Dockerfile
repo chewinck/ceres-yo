@@ -1,19 +1,13 @@
-# Imagen base PHP
+# Imagen base
 FROM php:8.4-fpm
 
-# Set working directory
+# Establecer directorio de trabajo
 WORKDIR /var/www/html
 
-# Copia el código fuente al contenedor
-COPY . /var/www/html
-
-# Ajusta UID y GID de www-data para que coincida con el host (opcional)
+# Ajustar UID y GID de www-data para que coincida con tu host (usualmente UID 1000)
 RUN usermod -u 1000 www-data && groupmod -g 1000 www-data
 
-# Get latest Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-# Instala dependencias del sistema
+# Instalar dependencias del sistema
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -27,28 +21,33 @@ RUN apt-get update && apt-get install -y \
     && apt-get install -y nodejs \
     && rm -rf /var/lib/apt/lists/*
 
-# Instala extensiones PHP
+# Instalar extensiones PHP
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
-# Marca el directorio como "seguro" para Git
+# Instalar Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Copiar proyecto al contenedor
+COPY . /var/www/html
+
+# Asegurar que Git confíe en el directorio
 RUN git config --global --add safe.directory /var/www/html
 
-# Crea las carpetas necesarias para Laravel
-RUN mkdir -p /var/www/.npm /var/www/html/storage /var/www/html/bootstrap/cache \
-    && chown -R www-data:www-data /var/www/.npm /var/www/html
+# Crear carpetas necesarias con permisos correctos
+RUN mkdir -p /var/www/html/storage /var/www/html/bootstrap/cache /var/www/.npm \
+    && chown -R www-data:www-data /var/www/html /var/www/.npm
 
-# Usa el usuario www-data a partir de aquí
+# Cambiar a usuario www-data
 USER www-data
 
-# (Opcional) Instalar dependencias de Node y compilar assets (si aplica)
+# Instalar dependencias de PHP (composer)
+RUN composer install --no-interaction --no-dev --optimize-autoloader
+
+# Instalar dependencias JS y compilar assets (si aplica)
 RUN npm install && npm run build
 
-# (Opcional) Instalar dependencias PHP (si quieres hacer esto en build-time)
-# Si prefieres hacerlo al correr el contenedor, puedes quitar esta línea
-RUN composer install --no-interaction --no-dev --optimize-autoloader || true
-
-# Permisos finales
+# Establecer permisos finales
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Ejecuta el contenedor con PHP-FPM
+# Comando por defecto
 CMD ["php-fpm"]

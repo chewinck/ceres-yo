@@ -36,8 +36,6 @@ services:
         container_name: ceresyo-app-container
         restart: unless-stopped
         working_dir: /var/www/html
-        volumes:
-            - ./:/var/www/html
         user: "www-data"
         depends_on:
             - mariadb
