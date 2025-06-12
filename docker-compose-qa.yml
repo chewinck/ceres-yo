@@ -1,0 +1,54 @@
+version: "3.7" # versión del docker-compose
+
+services:
+    nginx: # 1er servicio: nginx
+        image: nginx:1.23-alpine
+        container_name: ceresyo-server-container
+        ports:
+            - 8081:80 # puerto de mi PC : puerto del contenedor
+        volumes:
+            - ./:/var/www/html
+            - ./nginx:/etc/nginx/conf.d/
+        depends_on:
+            - app
+        networks:
+            - NetCeresYo
+
+    mariadb: # 2do servicio
+        image: mariadb:10.9 # imagen de docker hub
+        container_name: ceresyo-db-container # nombre de referencia del servicio
+        restart: unless-stopped # si tiene algun problema, reinicialo
+        ports:
+            - 33069:3306 # puerto local:puerto del servicio
+        volumes:
+            - db_data:/var/lib/mysql # carpeta local:carpeta de config de mysql
+        environment: # datos de configuracion del entorno
+            MARIADB_DATABASE: ceres_yo_db
+            MARIADB_USER: root
+            MARIADB_PASSWORD: root
+            MARIADB_ROOT_PASSWORD: root
+
+        networks:
+            - NetCeresYo # red
+
+    app: # 2do servicio: PHP-FPM
+        image: 1121872835/amy-ceresyo:qa
+        container_name: ceresyo-app-container
+        restart: unless-stopped
+        working_dir: /var/www/html
+        volumes:
+            - ./:/var/www/html
+        user: "www-data"
+        env_file:
+            - ${HOME}/environments/ceresyo-env/.env
+        depends_on:
+            - mariadb
+        networks:
+            - NetCeresYo
+
+networks: # definición de redes
+    NetCeresYo:
+        driver: bridge
+
+volumes: # definición de volúmenes
+    db_data:
