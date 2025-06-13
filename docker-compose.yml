@@ -9,6 +9,7 @@ services:
         volumes:
             - ./:/var/www/html
             - ./nginx:/etc/nginx/conf.d/
+            - laravel_build:/var/www/html/public/build
         depends_on:
             - app
         networks:
@@ -38,6 +39,8 @@ services:
         container_name: ceresyo-app-container
         restart: unless-stopped
         working_dir: /var/www/html
+        volumes:
+            - laravel_build:/var/www/html/public/build
         user: "www-data"
         env_file:
             - ${HOME}/environments/ceresyo-env/.env
@@ -52,3 +55,4 @@ networks: # definición de redes
 
 volumes: # definición de volúmenes
     db_data:
+    laravel_build:
