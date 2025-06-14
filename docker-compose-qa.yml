@@ -54,3 +54,6 @@ networks: # definición de redes
 volumes: # definición de volúmenes
     db_data:
     laravel_build:
+
+
+    
