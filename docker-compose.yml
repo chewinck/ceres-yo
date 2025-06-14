@@ -15,7 +15,6 @@ services:
       - ./docker/app/php.ini:/usr/local/etc/php/conf.d/php.ini
     env_file:
       - ${HOME}/environments/ceresyo-env/.env
-    user: "www-data"
     networks:
       - NetCeresYo
     depends_on:
