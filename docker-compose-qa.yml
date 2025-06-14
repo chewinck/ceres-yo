@@ -9,7 +9,7 @@ services:
         volumes:
             - ./:/var/www/html
             - ./nginx:/etc/nginx/conf.d/
-            - laravel_build:/var/www/html/public/build
+            # - laravel_build:/var/www/html/public/build
         depends_on:
             - app
         networks:
@@ -38,7 +38,7 @@ services:
         restart: unless-stopped
         working_dir: /var/www/html
         volumes:
-            - laravel_build:/var/www/html/public/build
+            - ./:/var/www/html
         user: "www-data"
         env_file:
             - /home/adminqa/environments/ceresyo-env/.env
