@@ -36,6 +36,8 @@ services:
         container_name: ceresyo-app-container
         restart: unless-stopped
         working_dir: /var/www/html
+        env_file:
+            - /home/adminqa/environments/ceresyo-env/.env
         user: "www-data"
         depends_on:
             - mariadb
