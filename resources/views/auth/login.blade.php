@@ -95,7 +95,7 @@
         </div>
         <div class="flex-1 bg-blue-100 text-center hidden lg:flex">
             <div class="m-12 xl:m-16 w-full bg-contain bg-center bg-no-repeat"
-                style="background-image: url('{{ asset('storage/imagenInicioSesión.svg') }}');">
+                style="background-image: url('{{ asset('storage/image_inicio_sesion.svg') }}');">
             </div>
 
         </div>

@@ -1,53 +1,35 @@
-# Imagen base
 FROM php:8.4-fpm
 
-# Establecer directorio de trabajo
-WORKDIR /var/www/html
+ARG UID=1000
+ARG GID=1000
 
-# Ajustar UID y GID de www-data para que coincida con tu host (usualmente UID 1000)
-RUN usermod -u 1000 www-data && groupmod -g 1000 www-data
+RUN usermod -u $UID www-data && groupmod -g $GID www-data
 
-# Instalar dependencias del sistema
+# Dependencias del sistema
 RUN apt-get update && apt-get install -y \
-    git \
-    curl \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    zip \
-    unzip \
-    gnupg \
-    && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
-    && apt-get install -y nodejs \
-    && rm -rf /var/lib/apt/lists/*
+    git curl zip unzip libpng-dev libonig-dev libxml2-dev \
+    gnupg libzip-dev libpq-dev \
+    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
 
-# Instalar extensiones PHP
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+# Instalar Node.js
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && apt-get install -y nodejs
 
 # Instalar Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copiar proyecto al contenedor
-COPY . /var/www/html
+WORKDIR /var/www/html
 
-# Asegurar que Git confíe en el directorio
-RUN git config --global --add safe.directory /var/www/html
+# Copiar todo el proyecto (incluyendo artisan)
+COPY . .
 
-# Crear carpetas necesarias con permisos correctos
-RUN mkdir -p /var/www/html/storage /var/www/html/bootstrap/cache /var/www/.npm \
-    && chown -R www-data:www-data /var/www/html /var/www/.npm
+# Asignar permisos
+RUN chown -R www-data:www-data /var/www/html
 
-# Cambiar a usuario www-data
 USER www-data
 
-# Instalar dependencias de PHP (composer)
-RUN composer install --no-interaction --no-dev --optimize-autoloader
+# Ahora sí: instalar dependencias PHP y JS
+RUN composer install --no-dev --no-interaction --optimize-autoloader \
+    && npm install \
+    && npm run build
 
-# Instalar dependencias JS y compilar assets (si aplica)
-RUN npm install && npm run build
-
-# Establecer permisos finales
-RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
-
-# Comando por defecto
 CMD ["php-fpm"]
