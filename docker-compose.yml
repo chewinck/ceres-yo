@@ -6,39 +6,29 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        UID: 1000
-        GID: 1000
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
     container_name: ceresyo-app-container
-    working_dir: /var/www/html
+    ports:
+      - "8081:80"
     volumes:
       - ./:/var/www/html:cached
-      - ./docker/app/php.ini:/usr/local/etc/php/conf.d/php.ini
+      - vendor:/var/www/html/vendor
+      - node_modules:/var/www/html/node_modules
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./docker/app/php.ini:/usr/local/etc/php/conf.d/php.ini:ro
     env_file:
       - ${HOME}/environments/ceresyo-env/.env
     networks:
       - NetCeresYo
-    depends_on:
-      - mariadb
-
-  nginx:
-    image: nginx:1.23-alpine
-    container_name: ceresyo-server-container
-    ports:
-      - 8081:80
-    volumes:
-      - ./:/var/www/html:cached
-      - ./nginx:/etc/nginx/conf.d
-    depends_on:
-      - app
-    networks:
-      - NetCeresYo
+    entrypoint: ["/usr/local/bin/docker-entrypoint.sh"]
 
   mariadb:
     image: mariadb:10.9
     container_name: ceresyo-db-container
     restart: unless-stopped
     ports:
-      - 33069:3306
+      - "33069:3306"
     volumes:
       - db_data:/var/lib/mysql
     environment:
@@ -54,4 +44,6 @@ networks:
     driver: bridge
 
 volumes:
+  vendor:
+  node_modules:
   db_data:
