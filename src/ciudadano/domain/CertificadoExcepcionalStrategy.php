@@ -1,31 +1,43 @@
 <?php
 
-namespace App\Ciudadano\domain;
-use App\Ciudadano\View\Dto\CertificadoDto;
-use App\Ciudadano\Domain\CertificadoStrategy;
+namespace Src\Ciudadano\Domain;
+use Src\ciudadano\view\dto\CertificadoDto;
+use Src\ciudadano\domain\CertificadoStrategy;
+use Illuminate\Support\Facades\Log;
 
 final class CertificadoExcepcionalStrategy implements CertificadoStrategy
 {
+
+    private CertificadoDto $certificadoDto;
+
+
+    public function __construct(CertificadoDto $certificadoDto)
+    {
+        $this->certificadoDto = $certificadoDto;
+    }
+
     /**
      * @param CertificadoDto $certificadoDto
      * @return string
      */
-    public function generar(CertificadoDto $certificadoDto): bool
+    public function generar(): bool
     {
         // Aquí se implementa la lógica para generar el certificado excepcional.
         // Por ejemplo, podrías usar una plantilla y reemplazar los datos necesarios.
         
-        $contenido = "Certificado Excepcional de tipo: {$certificadoDto->tipo}\n";
-        $contenido .= "Categoría: {$certificadoDto->categoria}\n";
+        $contenido = "Certificado Excepcional de tipo: {$this->certificadoDto->tipo}\n";
+        $contenido .= "Categoría: {$this->certificadoDto->categoria}\n";
+
+        Log::info("Esta es el certificado Excepcional");            
         
-        if ($certificadoDto->requiereFormulario) {
+        if ($this->certificadoDto->requiereFormulario) {
             $contenido .= "Requiere formulario.\n";
         } else {
             $contenido .= "No requiere formulario.\n";
         }
         
-        if ($certificadoDto->plantilla) {
-            $contenido .= "Plantilla utilizada: {$certificadoDto->plantilla}\n";
+        if ($this->certificadoDto->plantilla) {
+            $contenido .= "Plantilla utilizada: {$this->certificadoDto->plantilla}\n";
         }
         
         return true;

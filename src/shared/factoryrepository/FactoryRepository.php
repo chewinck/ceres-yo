@@ -1,6 +1,6 @@
 <?php
 
-namespace Src\shared\factoryrepository;
+namespace Src\Shared\FactoryRepository;
 
 use Src\admin\domain\UserRepositoryInterface;
 use Src\admin\domain\UserRepository;

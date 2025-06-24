@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Ciudadano\View\Dto;
+namespace Src\ciudadano\view\dto;
 
 class CertificadoDto
 {
@@ -9,6 +9,6 @@ class CertificadoDto
         public string $categoria,
         public bool $requiereFormulario,
         public ?string $plantilla = null,
-        public array $documentos = []
+        public  $documentos = null
     ) {}
 }

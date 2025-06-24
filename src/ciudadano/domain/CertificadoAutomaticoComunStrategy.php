@@ -1,32 +1,40 @@
 <?php
 
-namespace App\Ciudadano\domain;
+namespace Src\ciudadano\domain;
 
-use App\Ciudadano\View\Dto\CertificadoDto;
-use App\Ciudadano\Domain\CertificadoStrategy;
+use Src\ciudadano\view\dto\CertificadoDto;
+use Src\ciudadano\domain\CertificadoStrategy;
+
+use Illuminate\Support\Facades\Log;
 
 final class CertificadoAutomaticoComunStrategy implements CertificadoStrategy
 {
+
+    private CertificadoDto $certificadoDto;
     /**
      * @param CertificadoDto $certificadoDto
      * @return string
      */
-    public function generar(CertificadoDto $certificadoDto): bool
+
+     public function __construct(CertificadoDto $certificadoDto){
+        $this->certificadoDto = $certificadoDto;
+    
+    }
+
+
+    public function generar(): bool
     {
         // Aquí se implementa la lógica para generar el certificado automático común.
         // Por ejemplo, podrías usar una plantilla y reemplazar los datos necesarios.
         
-        $contenido = "Certificado de tipo: {$certificadoDto->tipo}\n";
-        $contenido .= "Categoría: {$certificadoDto->categoria}\n";
+        $contenido = "Certificado de tipo: {$this->certificadoDto->tipo}\n";
+        $contenido .= "Categoría: {$this->certificadoDto->categoria}\n";
+
+ 
+        Log::info("Este es el certificado Automático Común");        
         
-        if ($certificadoDto->requiereFormulario) {
-            $contenido .= "Requiere formulario.\n";
-        } else {
-            $contenido .= "No requiere formulario.\n";
-        }
-        
-        if ($certificadoDto->plantilla) {
-            $contenido .= "Plantilla utilizada: {$certificadoDto->plantilla}\n";
+        if ($this->certificadoDto->plantilla) {
+            $contenido .= "Plantilla utilizada: {$this->certificadoDto->plantilla}\n";
         }
         
         return true;

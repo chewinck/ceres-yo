@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Ciudadano\Domain;
+namespace Src\ciudadano\domain;
+
+use Src\ciudadano\view\dto\CertificadoDto;
 
 interface CertificadoStrategy
 {
@@ -9,6 +11,8 @@ interface CertificadoStrategy
      * @param string $numero
      * @return string
      */
-    public function generar(CertificadoDto $certificadoDto): bool;
+
+    public function __construct(CertificadoDto $certificadoDto);
+    public function generar(): bool;
 
 }

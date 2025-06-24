@@ -7,7 +7,7 @@ class ResponseHttp{
     private string $message;
     private $data;
 
-    public function __construct($code = 200, $message = "", $data = [])
+    public function __construct($code = 200, $message = "", $data = null)
     {        
         $this->code = $code;
         $this->message = $message;
