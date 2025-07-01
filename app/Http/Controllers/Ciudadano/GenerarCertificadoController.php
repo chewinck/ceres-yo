@@ -15,9 +15,12 @@ class GenerarCertificadoController extends Controller
 
     public function generar(GenerarCertificadoFormRequest $request)
     {
+
+        var_dump($request->all());
+        die();
         $certificadoDto = new CertificadoDto(
-            tipo: $request->tipo,
-            categoria: $request->categoria,
+            tipo: $request->tipoCertificado,
+            categoria: $request->categoriaCertificado,
             requiereFormulario: ConfigCertificadoService::obtenerRequiereFormulario($request->tipo, $request->categoria),
             plantilla: ConfigCertificadoService::obtenerPlantillaCertificado($request->tipo, $request->categoria),
             documentos: ConfigCertificadoService::obtenerDocumentos($request->tipo, $request->categoria)
@@ -27,13 +30,13 @@ class GenerarCertificadoController extends Controller
 
         $resp = $generarCertificadoUseCase->execute();
 
-        return response()->json([
-            "response" => [
-                "code" => $resp->getCode(),
-                "message" => $resp->getMessage(),
-                "data" => $resp->getData()
-            ]
-        ], $resp->getCode());
+        return $resp;
 
     }
+
+    public function solicitar()
+    {
+        return view('certificate.solicitar');
+    }
+
 }

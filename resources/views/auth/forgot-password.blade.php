@@ -6,7 +6,7 @@
             </div>
             <div class="flex flex-col items-center mb-6">
                 <h1
-                    class="w-full max-w-xs text-3xl font-bold shadow-sm rounded-lg py-3 text-blue-800 flex items-center justify-center transition-all duration-300 ease-in-out">
+                    class="w-full max-w-xs text-3xl font-bold shadow-sm rounded-lg py-3 text-green-800 flex items-center justify-center transition-all duration-300 ease-in-out">
                     Recuperar contraseña
                 </h1>
             </div>

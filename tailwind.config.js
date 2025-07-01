@@ -16,7 +16,7 @@ export default {
             },
             colors: {
                 brandBlue: "#F6F8FC",
-                
+                'custom-green': '#078930'
             },
         },
     },

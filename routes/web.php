@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Ciudadano\GenerarCertificadoController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 Route::get('/dashboard', function () {
@@ -20,11 +20,14 @@ Route::middleware('auth')->group(function () {
   
 });
 
-  // Rutas para el controlador de GenerarCertificado
-//   Route::post('/certificado', [GenerarCertificadoController::class, 'generar'])
-//   ->name('certificado.generar');
-
 
 Route::get('/users', [UserController::class, 'index'])->name('users.index');
+
+  // Rutas para el controlador de GenerarCertificado
+
+  Route::get('/certificado', [GenerarCertificadoController::class, 'solicitar'])
+  ->name('certificado.solicitar');
+  Route::post('/certificado', [GenerarCertificadoController::class, 'generar'])
+  ->name('certificado.generar');
 
 require __DIR__.'/auth.php';

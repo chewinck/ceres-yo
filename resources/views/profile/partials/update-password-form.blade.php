@@ -21,7 +21,7 @@
                     </div>
                 @endif
     <header>
-        <h2 class="text-lg font-medium text-blue-900">
+        <h2 class="text-lg font-medium text-green-900">
             {{ __('Actualizar contraseña') }}
         </h2>
 

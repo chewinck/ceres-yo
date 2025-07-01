@@ -1,6 +1,6 @@
-<nav x-data="{ open: false }" class=" bg-gray-600 border-b border-gray-100">
+<nav x-data="{ open: false }" class=" bg-gray-100 border-b">
     <!-- Primary Navigation Menu -->
-    <div class="mx-auto px-4 sm:px-6 lg:px-8 bg-gray-600 ">
+    <div class="mx-auto px-4 sm:px-6 lg:px-8 bg-gray-100 ">
         <div class="flex justify-between h-14">
             <div class="flex">
                 <!-- Logo -->
@@ -12,7 +12,8 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-2 sm:-my-px sm:ms-10 sm:flex ">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="text-white">
+                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="text-green-700 font-semibold ">
+                        {{ __('Dashboard') }}
                         {{ __('Certificado de Residencia Yopal ') }}
                     </x-nav-link>
 
@@ -24,7 +25,7 @@
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button
-                            class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
+                            class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-green bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
                             <div>{{ Auth::user()->nombre }}</div>
 
                             <div class="ms-1">
@@ -40,7 +41,7 @@
 
                     <x-slot name="content">
                         <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
+                            {{ __('Editar datos') }}
                         </x-dropdown-link>
 
                         <!-- Authentication -->
@@ -106,4 +107,7 @@
             </div>
         </div>
     </div>
+    <div>
+                <img src="{{ asset('storage/linea-bandera-amy.png') }}" alt="Colores bandera Yopal" class="w-full h-[3px] object-cover">
+            </div>
 </nav>

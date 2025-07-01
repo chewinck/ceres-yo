@@ -21,7 +21,7 @@
                     </div>
         @endif
     <header>
-        <h2 class="text-lg font-medium text-blue-900">
+        <h2 class="text-lg font-medium text-green-900">
             {{ __('Actualizar datos personales') }}
         </h2>
 
@@ -44,8 +44,8 @@
 
                                 <select id="nacionalidad" name="nacionalidad"
                                     class="w-full mt-1 text-black border border-gray-300 rounded-md shadow-sm
-                                        hover:border-blue-500 hover:text-blue-700
-                                        focus:border-blue-600 focus:ring focus:ring-blue-200 focus:outline-none
+                                        hover:border-green-500 hover:text-green-700
+                                        focus:border-green-600 focus:ring focus:ring-green-200 focus:outline-none
                                         transition duration-150 ease-in-out ">
                                     <option value="" disabled {{ old('nacionalidad') ? '' : 'selected' }}>Selecciona</option>
                                     <option value="Colombiana" {{ old('nacionalidad', $user->ciudadano->nacionalidad) == 'Colombiana' ? 'selected' : '' }}>Colombiana</option>
@@ -62,8 +62,8 @@
                             <x-input-label for="tipoIdentificacion" :value="__('Tipo de Identificación *')" />
                             <select id="tipoIdentificacion" name="tipoIdentificacion" 
                                 class="w-full mt-1 text-black border border-gray-300 rounded-md shadow-sm
-                                        hover:border-blue-500 hover:text-blue-700
-                                        focus:border-blue-600 focus:ring focus:ring-blue-200 focus:outline-none
+                                        hover:border-green-500 hover:text-green-700
+                                        focus:border-green-600 focus:ring focus:ring-green-200 focus:outline-none
                                         transition duration-150 ease-in-out ">
                                 <option value="" disabled {{ old('tipoIdentificacion') ? '' : 'selected' }}>Selecciona</option>
                                 @foreach ([
@@ -124,13 +124,13 @@
                             <div class="mt-2 flex gap-4">
                                 <label class="inline-flex items-center">
                                     <input type="radio" name="tipoDireccion" value="Urbana" 
-                                        class="text-blue-600 border-gray-300 focus:ring-blue-500 "
+                                        class="text-green-600 border-gray-300 focus:ring-green-500 "
                                         {{ old('tipoDireccion', $user->ciudadano->tipo_direccion) == 'Urbana' ? 'checked' : '' }}>
                                     <span class="ml-2 text-black text-sm">Urbana</span>
                                 </label>
                                 <label class="inline-flex items-center">
                                     <input type="radio" name="tipoDireccion" value="Rural" 
-                                        class="text-blue-600 border-gray-300 focus:ring-blue-500 "
+                                        class="text-green-600 border-gray-300 focus:ring-green-500 "
                                         {{ old('tipoDireccion', $user->ciudadano->tipo_direccion) == 'Rural' ? 'checked' : '' }}>
                                     <span class="ml-2 text-black text-sm">Rural</span>
                                 </label>

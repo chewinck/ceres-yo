@@ -4,8 +4,8 @@
     @disabled($disabled)
     {{ $attributes->class([
         'border-gray-300',
-        'focus:border-indigo-500',
-        'focus:ring-indigo-500',
+        'focus:border-green-500',
+        'focus:ring-green-500',
         'rounded-md',
         'shadow-sm'
     ]) }}
