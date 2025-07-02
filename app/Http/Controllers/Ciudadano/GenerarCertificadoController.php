@@ -15,8 +15,7 @@ class GenerarCertificadoController extends Controller
 
     public function generar(GenerarCertificadoFormRequest $request)
     {
-        // var_dump($request->all());
-        // die();
+
         $configuracionCertificado = ConfigCertificadoService::obtenerConfiguracionCertificado(
             $request->categoriaCertificado,
             $request->tipoCertificado
@@ -31,10 +30,13 @@ class GenerarCertificadoController extends Controller
         );
 
         $generarCertificadoUseCase = new GenerarCertificadoUseCase( $certificadoDto);
+        $contenidoPdf= $generarCertificadoUseCase->execute();
 
-        return $generarCertificadoUseCase->execute();
-
-      
+         return response($contenidoPdf)
+        ->header('Content-Type', 'application/pdf')
+        ->header('Content-Disposition', 'inline; filename="certificado.pdf"')
+        ->header('Content-Length', strlen($contenidoPdf));
+    
 
     }
 

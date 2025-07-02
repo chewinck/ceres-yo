@@ -21,13 +21,6 @@ final class GenerarCertificadoUseCase
     public function execute()
     {
         $certificadoStrategy = CertificadoFactory::crear($this->certificadoDto);
-        $resultado = $certificadoStrategy->generar($this->certificadoDto);
-
-        if (!$resultado) {
-            return new ResponseHttp(500, "Error al generar el certificado", null);
-        } 
-        return GenerarCertificadoService::generarPdf();
-        // return new ResponseHttp(200, "Certificado generado exitosamente", null);
-
+        return $certificadoStrategy->generar(new GenerarCertificadoService());
     }
 }   

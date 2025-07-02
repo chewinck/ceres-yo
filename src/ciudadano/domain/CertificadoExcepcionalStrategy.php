@@ -20,7 +20,7 @@ final class CertificadoExcepcionalStrategy implements CertificadoStrategy
      * @param CertificadoDto $certificadoDto
      * @return string
      */
-    public function generar(): bool
+    public function generar():string
     {
         // Aquí se implementa la lógica para generar el certificado excepcional.
         // Por ejemplo, podrías usar una plantilla y reemplazar los datos necesarios.

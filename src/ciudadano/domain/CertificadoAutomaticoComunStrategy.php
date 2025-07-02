@@ -22,21 +22,11 @@ final class CertificadoAutomaticoComunStrategy implements CertificadoStrategy
     }
 
 
-    public function generar(): bool
+    public function generar(GenerarCertificadoInterface $generarCertificado):string
     {
-        // Aquí se implementa la lógica para generar el certificado automático común.
-        // Por ejemplo, podrías usar una plantilla y reemplazar los datos necesarios.
-        
-        $contenido = "Certificado de tipo: {$this->certificadoDto->tipo}\n";
-        $contenido .= "Categoría: {$this->certificadoDto->categoria}\n";
-
- 
+         
         Log::info("Este es el certificado de categoría {$this->certificadoDto->categoria} y tipo {$this->certificadoDto->tipo}");        
         
-        if ($this->certificadoDto->plantilla) {
-            $contenido .= "Plantilla utilizada: {$this->certificadoDto->plantilla}\n";
-        }
-        
-        return true;
+       return $generarCertificado->generarPdf($this->certificadoDto->tipo); 
     }
 }

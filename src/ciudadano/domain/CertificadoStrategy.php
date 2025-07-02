@@ -13,6 +13,6 @@ interface CertificadoStrategy
      */
 
     public function __construct(CertificadoDto $certificadoDto);
-    public function generar(): bool;
+    public function generar(GenerarCertificadoInterface $generarCertificado):string;
 
 }

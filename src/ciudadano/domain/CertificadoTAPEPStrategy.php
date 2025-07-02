@@ -21,7 +21,7 @@ final class CertificadoTAPEPStrategy implements CertificadoStrategy
      * @param CertificadoDto $certificadoDto
      * @return string
      */
-    public function generar(): bool
+    public function generar():string
     {
         // Aquí se implementa la lógica para generar el certificado automático común.
         // Por ejemplo, podrías usar una plantilla y reemplazar los datos necesarios.

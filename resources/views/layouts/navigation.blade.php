@@ -26,6 +26,11 @@
                     <x-slot name="trigger">
                         <button
                             class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-green bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
+                            
+                            @guest
+                                <script>window.location.href = "{{ route('login') }}";</script>
+                            @endguest
+
                             <div>{{ Auth::user()->nombre }}</div>
 
                             <div class="ms-1">

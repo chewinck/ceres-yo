@@ -8,18 +8,49 @@ use PhpOffice\PhpWord\TemplateProcessor;
 use Barryvdh\Snappy\Facades\SnappyPdf;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
+use Src\ciudadano\domain\GenerarCertificadoInterface;
 
-class GenerarCertificadoService
+class GenerarCertificadoService implements GenerarCertificadoInterface
 {
-    public static function generarPdf()
+
+    private static function getNameTIpoCertificado(string $tipoCertificado): string
     {
-        // 1. Cargar plantilla
+        $arrayTipoCertificado = [
+            'EVE' => 'Certificados de residencia para fines de Estudio, Vivienda, y Empleo',
+            'PPL' => 'Certificado de residencia para personas Privadas de la libertad',
+            'PEPA' => 'Certificado de residencia para permiso especial - porte y salvoconducto de armas',
+            'TAPEP' => 'Certificado de residencia para trabajo en las áreas de influencia de los proyectos de exploración y explotación petrolera y minera',
+        ];
+        return $arrayTipoCertificado[$tipoCertificado] ?? 'Certificado Desconocido';
+    }   
+
+    public function generarPdf(string $tipoCertificado): string
+{
+    try {
+        Carbon::setLocale('es');
+
         $templatePath = storage_path('app/public/EVE.docx');
         $tempDocPath = storage_path('app/public/temp.docx');
+        $firmaPath = storage_path('app/public/firma-test.jpg');
+
+        if (!file_exists($templatePath)) {
+            $errorMessage = "Plantilla DOCX no encontrada: {$templatePath}";
+            \Sentry\captureMessage($errorMessage, \Sentry\Severity::fatal());
+            \Log::error($errorMessage);
+            return "ha ocurrio un error al generar el certificado, por favor intente más tarde.";
+        }
+
+        if (!file_exists($firmaPath)) {
+            $errorMessage = "Firma no encontrada: {$templatePath}";
+            \Sentry\captureMessage($errorMessage, \Sentry\Severity::fatal());
+            \Log::error($errorMessage);
+            return "ha ocurrio un error al generar el certificado, por favor intente más tarde.";
+        }
 
         $templateProcessor = new TemplateProcessor($templatePath);
 
-        // 2. Reemplazar variables
+        // Reemplazar variables
+        $templateProcessor->setValue('tipoCertificado', self::getNameTIpoCertificado($tipoCertificado));
         $templateProcessor->setValue('codigoComunicacion', '123456');
         $templateProcessor->setValue('numeroCertificado', UtilService::generateUniqueId());
         $templateProcessor->setValue('numeroDecreto', '2025-001');
@@ -32,10 +63,10 @@ class GenerarCertificadoService
         $templateProcessor->setValue('direccionResidencia', 'Calle 32 N 43 - 33');
         $templateProcessor->setValue('barrioResidencia', 'Bosques de Sirivana');
         $templateProcessor->setValue('diaCertificado', Carbon::now()->day);
-        $templateProcessor->setValue('mesCertificado', Carbon::now()->month);
+        $templateProcessor->setValue('mesCertificado', Carbon::now()->translatedFormat('F'));
         $templateProcessor->setValue('anioCertificado', Carbon::now()->year);
         $templateProcessor->setImageValue('firmaSecretario', [
-            'path' => storage_path('app/public/firma-test.jpg'),
+            'path' => $firmaPath,
             'width' => 60,
             'ratio' => true
         ]);
@@ -43,71 +74,59 @@ class GenerarCertificadoService
         $templateProcessor->setValue('nombreElaborador', 'Deisy Alfonso');
         $templateProcessor->setValue('cargoElaborador', 'Auxiliar Administrativo');
 
-        // 3. Guardar archivo temporal .docx
         $templateProcessor->saveAs($tempDocPath);
 
-        // 4. Convertir a HTML (soporte limitado en estilos)
+        // Convertir a HTML
         $phpWord = \PhpOffice\PhpWord\IOFactory::load($tempDocPath);
         $htmlWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'HTML');
         ob_start();
         $htmlWriter->save('php://output');
         $html = ob_get_clean();
 
-        // 5. Opcional: envolver HTML con estilos base para mejor apariencia
-      // 1. Inyectar clases manualmente en el HTML
-      $html = str_replace('<p>', '<p class="body-text">', $html);
-      $html = preg_replace('/<p>(.*?)CERTIFICA(.*?)<\/p>/', '<p class="header">$1CERTIFICA$2</p>', $html);
-      $html = preg_replace('/<p class="body-text">(.*?)Cargo:(.*?)<\/p>/', '<p class="body-text no-indent">$1Cargo:$2</p>', $html);
+        // Limpieza y estilos
+        $html = preg_replace('/margin-left:\s?[^;"]+;?/', '', $html);
+        $html = str_replace('<p>', '<p class="body-text">', $html);
+        $html = preg_replace('/<p>(.*?)CERTIFICA(.*?)<\/p>/', '<p class="header">$1CERTIFICA$2</p>', $html);
 
-      
-      // 2. Añadir <style> con clases personalizadas y márgenes simulados (solo efecto visual, reales se configuran en Snappy)
-      $style = '
-          <style>
-              body {
-                  margin: 0;
-                  padding: 0;
-                  font-family: "Arial", sans-serif;
-                  font-size: 14pt;
-                  line-height: 1.0; /* Interlineado sencillo */
-                  text-indent: 0;
-              }
-      
-              .header {
-                  font-size: 20pt;
-                  font-weight: bold;
-                  color: navy;
-                  text-align: center;
-                  margin-bottom: 20px;
-              }
-      
-              .body-text {
-                  font-size: 12pt;
-                  text-align: justify;
-                  line-height: 1.2;
-                  margin: 0 3cm;
-              }
-      
-              .signature {
-                  font-size: 13pt;
-                  margin-top: 40px;
-                  text-align: center;
-              }
-          </style>
-      ';
-      
-      // 3. Envolver HTML con head y body
-      $html = '<html><head>' . $style . '</head><body>' . $html . '</body></html>';
-      
-      // 4. Generar PDF con Snappy y configurar tamaño carta y márgenes reales
-      $pdf = SnappyPdf::loadHTML($html)
-          ->setPaper('letter') // Tamaño carta (8.5" x 11")
-          ->setOption('margin-top', '2.5cm')
-          ->setOption('margin-bottom', '2.5cm')
-          ->setOption('margin-left', '3cm')
-          ->setOption('margin-right', '3cm')
-          ->setOption('encoding', 'UTF-8');
-      
-      return $pdf->download('documento.pdf');
-      
+        $style = '
+            <style>
+                p {
+                    margin: 0;
+                    padding: 0;
+                    font-family: "Times New Roman", sans-serif;
+                    font-size: 12pt;
+                    line-height: 1.5;
+                    text-indent: 0;
+                }
+                .body-text {
+                    font-size: 12pt;
+                    text-align: justify;
+                    line-height: 1.2;
+                    margin: 0 3cm;
+                }
+            </style>
+        ';
+
+        $html = '<html><head>' . $style . '</head><body>' . $html . '</body></html>';
+
+        file_put_contents(storage_path('app/debug.html'), $html);
+
+        $pdf = SnappyPdf::loadHTML($html)
+            ->setPaper('letter')
+            ->setOption('margin-top', '2.5cm')
+            ->setOption('margin-bottom', '2.5cm')
+            ->setOption('margin-left', '3cm')
+            ->setOption('margin-right', '3cm')
+            ->setOption('encoding', 'UTF-8');
+
+        return $pdf->output('certificado_residencia_Yopal.pdf');
+
+    } catch (\Exception $e) {
+        $errorMessage = "Ha ocurrido un error al generar el certificado. Por favor, intente más tarde. Detalles: " . $e->getMessage();
+        \Sentry\captureMessage($errorMessage, \Sentry\Severity::fatal());
+        \Log::error($errorMessage);
+        return "Ha ocurrido un error al generar el certificado. Por favor, intente más tarde.";
     }
+}
+
 }

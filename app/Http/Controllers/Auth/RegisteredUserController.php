@@ -87,10 +87,12 @@ public function store(Request $request): RedirectResponse
 
         } catch (ValidationException $e) {
             Log::error('Errores de validación:', $e->errors());
+            \Sentry\captureException($e);
             return redirect()->back()->withErrors($e->errors())->withInput();
 
         } catch (\Exception $e) {
             Log::error('Error general:', ['message' => $e->getMessage()]);
+            \Sentry\captureException($e);
             return redirect()->back()->with('error', 'Ocurrió un error al guardar.');
         }
     }
