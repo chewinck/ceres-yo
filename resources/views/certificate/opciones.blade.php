@@ -32,12 +32,11 @@
 
     <form method="post" action="{{ route('certificado.generar') }}" class="mt-6 space-y-6">
         @csrf
-        @method('post')
 
         {{-- Tipo de Certificado --}}
                         <div>
                             <x-input-label for="tipoCertificado" :value="__('Tipo de certificado *')" />
-                            <select id="tipoCertificado" name="tipoCertiticado"
+                            <select id="tipoCertificado" name="tipoCertificado"
                                 class="w-full mt-1 text-black border border-gray-300 rounded-md shadow-sm
                                         hover:border-green-500 hover:text-green-700
                                         focus:border-green-600 focus:ring focus:ring-green-200 focus:outline-none

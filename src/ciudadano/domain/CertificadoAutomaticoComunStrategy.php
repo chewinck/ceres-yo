@@ -31,7 +31,7 @@ final class CertificadoAutomaticoComunStrategy implements CertificadoStrategy
         $contenido .= "Categoría: {$this->certificadoDto->categoria}\n";
 
  
-        Log::info("Este es el certificado Automático Común");        
+        Log::info("Este es el certificado de categoría {$this->certificadoDto->categoria} y tipo {$this->certificadoDto->tipo}");        
         
         if ($this->certificadoDto->plantilla) {
             $contenido .= "Plantilla utilizada: {$this->certificadoDto->plantilla}\n";

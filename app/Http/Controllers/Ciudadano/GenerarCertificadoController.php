@@ -15,22 +15,26 @@ class GenerarCertificadoController extends Controller
 
     public function generar(GenerarCertificadoFormRequest $request)
     {
+        // var_dump($request->all());
+        // die();
+        $configuracionCertificado = ConfigCertificadoService::obtenerConfiguracionCertificado(
+            $request->categoriaCertificado,
+            $request->tipoCertificado
+        );
 
-        var_dump($request->all());
-        die();
         $certificadoDto = new CertificadoDto(
             tipo: $request->tipoCertificado,
             categoria: $request->categoriaCertificado,
-            requiereFormulario: ConfigCertificadoService::obtenerRequiereFormulario($request->tipo, $request->categoria),
-            plantilla: ConfigCertificadoService::obtenerPlantillaCertificado($request->tipo, $request->categoria),
-            documentos: ConfigCertificadoService::obtenerDocumentos($request->tipo, $request->categoria)
+            requiereFormulario: $configuracionCertificado['requiere_formulario'],
+            plantilla: $configuracionCertificado['plantilla'],
+            documentos: $configuracionCertificado['documentos'],
         );
 
         $generarCertificadoUseCase = new GenerarCertificadoUseCase( $certificadoDto);
 
-        $resp = $generarCertificadoUseCase->execute();
+        return $generarCertificadoUseCase->execute();
 
-        return $resp;
+      
 
     }
 

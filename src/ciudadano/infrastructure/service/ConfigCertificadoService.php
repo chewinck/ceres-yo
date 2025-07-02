@@ -4,23 +4,18 @@ namespace Src\ciudadano\infrastructure\service;
 
 class ConfigCertificadoService
 {
-    public static function obtenerPlantillaCertificado(string $categoria, string $tipo): ?string
-    {
-        $config = self::getConfigCertificados();
-        return $config['categorias'][$categoria]['tipos'][$tipo]['plantilla'] ?? null;
-    }
+    public static function obtenerConfiguracionCertificado(string $categoria, string $tipo): array
+{
+    $config = self::getConfigCertificados();
+    $datos = $config['categorias'][$categoria]['tipos'][$tipo] ?? [];
 
-    public static function obtenerRequiereFormulario(string $categoria, string $tipo): bool
-    {
-        $config = self::getConfigCertificados();
-        return $config['categorias'][$categoria]['tipos'][$tipo]['requiere_formulario'] ?? false;
-    }
+    return [
+        'plantilla' => $datos['plantilla'] ?? null,
+        'documentos' => $datos['documentos'] ?? null,
+        'requiere_formulario' => $datos['requiere_formulario'] ?? false,
+    ];
+}
 
-    public static function obtenerDocumentos(string $categoria, string $tipo): ?array
-    {
-        $config = self::getConfigCertificados();
-        return $config['categorias'][$categoria]['tipos'][$tipo]['documentos'] ?? null;
-    }
 
     private static function getConfigCertificados(): array
     {
