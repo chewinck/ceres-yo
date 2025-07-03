@@ -21,26 +21,9 @@ final class CertificadoTAPEPStrategy implements CertificadoStrategy
      * @param CertificadoDto $certificadoDto
      * @return string
      */
-    public function generar():string
+    public function generar(GenerarCertificadoInterface $generarCertificado):string
     {
-        // Aquí se implementa la lógica para generar el certificado automático común.
-        // Por ejemplo, podrías usar una plantilla y reemplazar los datos necesarios.
-        
-        $contenido = "Certificado de tipo: {$this->certificadoDto->tipo}\n";
-        $contenido .= "Categoría: {$this->certificadoDto->categoria}\n";
-
         Log::info("Esta es el certificado Automático TAPEP");     
-        
-        if ($this->certificadoDto->requiereFormulario) {
-            $contenido .= "Requiere formulario.\n";
-        } else {
-            $contenido .= "No requiere formulario.\n";
-        }
-        
-        if ($this->certificadoDto->plantilla) {
-            $contenido .= "Plantilla utilizada: {$this->certificadoDto->plantilla}\n";
-        }
-        
-        return true;
+        return $generarCertificado->generarPdf($this->certificadoDto->tipo); 
     }
 }

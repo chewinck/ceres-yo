@@ -9,6 +9,7 @@ use Barryvdh\Snappy\Facades\SnappyPdf;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Src\ciudadano\domain\GenerarCertificadoInterface;
+use Src\admin\infrastructure\EloquentUserRepository;
 
 class GenerarCertificadoService implements GenerarCertificadoInterface
 {
@@ -32,6 +33,7 @@ class GenerarCertificadoService implements GenerarCertificadoInterface
         $templatePath = storage_path('app/public/EVE.docx');
         $tempDocPath = storage_path('app/public/temp.docx');
         $firmaPath = storage_path('app/public/firma-test.jpg');
+        $imageEncabezado = storage_path('app/public/escudo-yopal-certificado.png');
 
         if (!file_exists($templatePath)) {
             $errorMessage = "Plantilla DOCX no encontrada: {$templatePath}";
@@ -46,22 +48,29 @@ class GenerarCertificadoService implements GenerarCertificadoInterface
             \Log::error($errorMessage);
             return "ha ocurrio un error al generar el certificado, por favor intente más tarde.";
         }
+        $eloquentUserRepository = new EloquentUserRepository();
+        $user = $eloquentUserRepository->getAuthenticatedUserWithCiudadano();
 
         $templateProcessor = new TemplateProcessor($templatePath);
 
         // Reemplazar variables
+        $templateProcessor->setImageValue('imageEncabezado', [
+            'path' => $imageEncabezado,
+            'width' => 60,
+            'ratio' => true
+        ]);
         $templateProcessor->setValue('tipoCertificado', self::getNameTIpoCertificado($tipoCertificado));
         $templateProcessor->setValue('codigoComunicacion', '123456');
         $templateProcessor->setValue('numeroCertificado', UtilService::generateUniqueId());
         $templateProcessor->setValue('numeroDecreto', '2025-001');
-        $templateProcessor->setValue('nombreCiudadano', 'Edwin Rodriguez Suarez');
-        $templateProcessor->setValue('numeroIdentificacion', '1121872835');
-        $templateProcessor->setValue('lugarExpedicion', 'Villavicencio - Meta');
+        $templateProcessor->setValue('nombreCiudadano', $user->getNombre());
+        $templateProcessor->setValue('numeroIdentificacion', $user->getCiudadano()->getNumeroIdentificacion());
+        $templateProcessor->setValue('lugarExpedicion', 'pendiente');
         $templateProcessor->setValue('aniosResidencia', '9');
         $templateProcessor->setValue('mesesResidencia', '8');
         $templateProcessor->setValue('diasResidencia', '15');
-        $templateProcessor->setValue('direccionResidencia', 'Calle 32 N 43 - 33');
-        $templateProcessor->setValue('barrioResidencia', 'Bosques de Sirivana');
+        $templateProcessor->setValue('direccionResidencia', $user->getCiudadano()->getDireccion());
+        $templateProcessor->setValue('barrioResidencia', $user->getCiudadano()->getBarrio());
         $templateProcessor->setValue('diaCertificado', Carbon::now()->day);
         $templateProcessor->setValue('mesCertificado', Carbon::now()->translatedFormat('F'));
         $templateProcessor->setValue('anioCertificado', Carbon::now()->year);
@@ -113,7 +122,7 @@ class GenerarCertificadoService implements GenerarCertificadoInterface
 
         $pdf = SnappyPdf::loadHTML($html)
             ->setPaper('letter')
-            ->setOption('margin-top', '2.5cm')
+            ->setOption('margin-top', '1.5cm')
             ->setOption('margin-bottom', '2.5cm')
             ->setOption('margin-left', '3cm')
             ->setOption('margin-right', '3cm')

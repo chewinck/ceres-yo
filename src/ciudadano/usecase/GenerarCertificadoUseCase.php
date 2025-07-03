@@ -11,16 +11,9 @@ use Src\ciudadano\infrastructure\service\GenerarCertificadoService;
 
 final class GenerarCertificadoUseCase
 {
-    private  CertificadoDto  $certificadoDto;
-
-    public function __construct( CertificadoDto $certificadoDto)
+    public function execute(CertificadoDto $certificadoDto)
     {
-        $this->certificadoDto =  $certificadoDto;
-    }
-
-    public function execute()
-    {
-        $certificadoStrategy = CertificadoFactory::crear($this->certificadoDto);
+        $certificadoStrategy = CertificadoFactory::crear($certificadoDto);
         return $certificadoStrategy->generar(new GenerarCertificadoService());
     }
 }   

@@ -12,9 +12,9 @@ use App\Http\Requests\GenerarCertificadoFormRequest;
 class GenerarCertificadoController extends Controller
 {
 
-
     public function generar(GenerarCertificadoFormRequest $request)
     {
+        // $inputs = $request->validated();
 
         $configuracionCertificado = ConfigCertificadoService::obtenerConfiguracionCertificado(
             $request->categoriaCertificado,
@@ -29,15 +29,13 @@ class GenerarCertificadoController extends Controller
             documentos: $configuracionCertificado['documentos'],
         );
 
-        $generarCertificadoUseCase = new GenerarCertificadoUseCase( $certificadoDto);
-        $contenidoPdf= $generarCertificadoUseCase->execute();
+        $generarCertificadoUseCase = new GenerarCertificadoUseCase();
+        $contenidoPdf= $generarCertificadoUseCase->execute($certificadoDto);
 
          return response($contenidoPdf)
         ->header('Content-Type', 'application/pdf')
         ->header('Content-Disposition', 'inline; filename="certificado.pdf"')
         ->header('Content-Length', strlen($contenidoPdf));
-    
-
     }
 
     public function solicitar()

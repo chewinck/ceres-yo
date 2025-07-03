@@ -7,6 +7,9 @@ use Src\admin\domain\User;
 use Src\admin\domain\UserRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;    
+use Src\ciudadano\domain\Ciudadano;
+use Illuminate\Support\Facades\Auth;
+
 
 class EloquentUserRepository implements UserRepositoryInterface{
 
@@ -39,6 +42,34 @@ class EloquentUserRepository implements UserRepositoryInterface{
             return $userEntity;
         }
         return null;
+    }
+
+    public function getAuthenticatedUserWithCiudadano(): ?User {
+        $user =  \App\Models\User::with('ciudadano')->find(Auth::id());
+
+        if($user){
+            $ciudadano = $user->ciudadano;
+            if ($ciudadano) {
+                $ciudadanoEntity = new Ciudadano();
+                $ciudadanoEntity->setNumeroIdentificacion($ciudadano->numero_identificacion);
+                $ciudadanoEntity->setNacionalidad($ciudadano->nacionalidad);
+                $ciudadanoEntity->setTipoIdentificacion($ciudadano->tipo_identificacion);
+                $ciudadanoEntity->setFechaExpedicion(new \DateTime($ciudadano->fecha_expedicion));
+                $ciudadanoEntity->setTelefono($ciudadano->telefono);
+                $ciudadanoEntity->setTipoDireccion($ciudadano->tipo_direccion);
+                $ciudadanoEntity->setBarrio($ciudadano->barrio);
+                $ciudadanoEntity->setDireccion($ciudadano->direccion);
+            }
+                
+            $userEntity = new User();
+            $userEntity->setId($user->id);
+            $userEntity->setNombre($user->nombre); 
+            $userEntity->setEmail($user->email);
+            $userEntity->setPassword($user->password);
+            $userEntity->setPerfil($user->rol);
+            $userEntity->setCiudadano($ciudadanoEntity);
+            return $userEntity;
+        }
     }
     
 }
