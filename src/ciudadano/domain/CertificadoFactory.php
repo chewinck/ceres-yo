@@ -20,7 +20,7 @@ class CertificadoFactory
      */
     public static function crear(CertificadoDto $certificadoDto): CertificadoStrategy
     {
-        if (strtolower(str_replace(' ', '', $certificadoDto->categoria)) === 'automatico') {
+        if (strtolower(str_replace(' ', '', $certificadoDto->categoria)) === 'automatica') {
             if (strtolower(str_replace(' ', '', $certificadoDto->tipo)) === 'tapep') {
                 return new CertificadoTAPEPStrategy($certificadoDto);
             }

@@ -58,7 +58,7 @@
                             <x-input-error :messages="$errors->get('tipoCertificado')" class="mt-2" />
                         </div>
 
-                        <input type="hidden" name="categoriaCertificado" value="automatico">
+                        <input type="hidden" name="categoriaCertificado" value="automatica">
 
         <!-- <div>
             <x-input-label for="update_password_password" :value="__('Nueva contraseña *')" />

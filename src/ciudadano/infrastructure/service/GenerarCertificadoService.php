@@ -9,7 +9,8 @@ use Barryvdh\Snappy\Facades\SnappyPdf;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Src\ciudadano\domain\GenerarCertificadoInterface;
-use Src\admin\infrastructure\EloquentUserRepository;
+use Src\admin\dao\eloquent\EloquentUserRepository;
+use Src\ciudadano\view\dto\ResponseCertificateDto;
 
 class GenerarCertificadoService implements GenerarCertificadoInterface
 {
@@ -25,7 +26,7 @@ class GenerarCertificadoService implements GenerarCertificadoInterface
         return $arrayTipoCertificado[$tipoCertificado] ?? 'Certificado Desconocido';
     }   
 
-    public function generarPdf(string $tipoCertificado): string
+    public function generarPdf(CertificadoDto $certificadoDto): ResponseCertificateDto
 {
     try {
         Carbon::setLocale('es');
@@ -39,17 +40,15 @@ class GenerarCertificadoService implements GenerarCertificadoInterface
             $errorMessage = "Plantilla DOCX no encontrada: {$templatePath}";
             \Sentry\captureMessage($errorMessage, \Sentry\Severity::fatal());
             \Log::error($errorMessage);
-            return "ha ocurrio un error al generar el certificado, por favor intente más tarde.";
+            return  new ResponseCertificateDto(null, $errorMessage);
         }
 
         if (!file_exists($firmaPath)) {
             $errorMessage = "Firma no encontrada: {$templatePath}";
             \Sentry\captureMessage($errorMessage, \Sentry\Severity::fatal());
             \Log::error($errorMessage);
-            return "ha ocurrio un error al generar el certificado, por favor intente más tarde.";
+            return  new ResponseCertificateDto(null, $errorMessage);
         }
-        $eloquentUserRepository = new EloquentUserRepository();
-        $user = $eloquentUserRepository->getAuthenticatedUserWithCiudadano();
 
         $templateProcessor = new TemplateProcessor($templatePath);
 
@@ -59,21 +58,21 @@ class GenerarCertificadoService implements GenerarCertificadoInterface
             'width' => 60,
             'ratio' => true
         ]);
-        $templateProcessor->setValue('tipoCertificado', self::getNameTIpoCertificado($tipoCertificado));
-        $templateProcessor->setValue('codigoComunicacion', '123456');
-        $templateProcessor->setValue('numeroCertificado', UtilService::generateUniqueId());
-        $templateProcessor->setValue('numeroDecreto', '2025-001');
-        $templateProcessor->setValue('nombreCiudadano', $user->getNombre());
-        $templateProcessor->setValue('numeroIdentificacion', $user->getCiudadano()->getNumeroIdentificacion());
-        $templateProcessor->setValue('lugarExpedicion', 'pendiente');
-        $templateProcessor->setValue('aniosResidencia', '9');
-        $templateProcessor->setValue('mesesResidencia', '8');
-        $templateProcessor->setValue('diasResidencia', '15');
-        $templateProcessor->setValue('direccionResidencia', $user->getCiudadano()->getDireccion());
-        $templateProcessor->setValue('barrioResidencia', $user->getCiudadano()->getBarrio());
-        $templateProcessor->setValue('diaCertificado', Carbon::now()->day);
-        $templateProcessor->setValue('mesCertificado', Carbon::now()->translatedFormat('F'));
-        $templateProcessor->setValue('anioCertificado', Carbon::now()->year);
+        $templateProcessor->setValue('tipoCertificado', self::getNameTIpoCertificado($certificadoDto->tipo));
+        $templateProcessor->setValue('codigoComunicacion', $certificadoDto->configuracion->codigoComunicacion);
+        $templateProcessor->setValue('numeroCertificado', $certificadoDto->configuracion->uuid);
+        $templateProcessor->setValue('numeroDecreto', $certificadoDto->configuracion->numeroDecreto);
+        $templateProcessor->setValue('nombreCiudadano', $certificadoDto->ciudadano->nombreCiudadano);
+        $templateProcessor->setValue('numeroIdentificacion', $certificadoDto->ciudadano->numeroIdentificacion);
+        $templateProcessor->setValue('lugarExpedicion', $certificadoDto->ciudadano->lugarExpedicion);
+        $templateProcessor->setValue('aniosResidencia', $certificadoDto->ciudadano->aniosResidencia);
+        $templateProcessor->setValue('mesesResidencia', $certificadoDto->ciudadano->mesesResidencia);
+        $templateProcessor->setValue('diasResidencia', $certificadoDto->ciudadano->diasResidencia);
+        $templateProcessor->setValue('direccionResidencia', $certificadoDto->ciudadano->direccionResidencia);
+        $templateProcessor->setValue('barrioResidencia', $certificadoDto->ciudadano->barrioResidencia);
+        $templateProcessor->setValue('diaCertificado', $certificadoDto->configuracion->diaCertificado);
+        $templateProcessor->setValue('mesCertificado', $certificadoDto->configuracion->mesCertificado);
+        $templateProcessor->setValue('anioCertificado', $certificadoDto->configuracion->anioCertificado);
         $templateProcessor->setImageValue('firmaSecretario', [
             'path' => $firmaPath,
             'width' => 60,
@@ -128,13 +127,13 @@ class GenerarCertificadoService implements GenerarCertificadoInterface
             ->setOption('margin-right', '3cm')
             ->setOption('encoding', 'UTF-8');
 
-        return $pdf->output('certificado_residencia_Yopal.pdf');
+      return  new ResponseCertificateDto($pdf->output('certificado_residencia_Yopal.pdf'), null);
 
     } catch (\Exception $e) {
         $errorMessage = "Ha ocurrido un error al generar el certificado. Por favor, intente más tarde. Detalles: " . $e->getMessage();
         \Sentry\captureMessage($errorMessage, \Sentry\Severity::fatal());
         \Log::error($errorMessage);
-        return "Ha ocurrido un error al generar el certificado. Por favor, intente más tarde.";
+        return  new ResponseCertificateDto(null, $errorMessage);
     }
 }
 

@@ -27,7 +27,7 @@ class GenerarCertificadoFormRequest extends FormRequest
     {
         return [
             'tipoCertificado' => ['required', 'string', 'max:5', 'in:EVE,PPL,PEPA,TAPEP'],
-            'categoriaCertificado' => ['required', 'string', 'max:12', 'in:automatico,excepcional'],
+            'categoriaCertificado' => ['required', 'string', 'max:12', 'in:automatica,excepcional'],
             'documento' => 'nullable|file|mimes:pdf|max:3240',
         ];
     }

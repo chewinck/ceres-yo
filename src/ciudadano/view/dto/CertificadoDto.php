@@ -9,6 +9,23 @@ class CertificadoDto
         public string $categoria,
         public bool $requiereFormulario,
         public ?string $plantilla = null,
-        public  $documentos = null
+        public  $documentos = null,
+        public ?ConfigBaseCertificadoDto $configuracion = null,
+        public ?CiudadanoDto $ciudadano = null
+
     ) {}
+
+    public function toArray(): array
+{
+    return [
+        'tipo' => $this->tipo,
+        'categoria' => $this->categoria,
+        'requiereFormulario' => $this->requiereFormulario,
+        'plantilla' => $this->plantilla,
+        'documentos' => $this->documentos,
+        'configuracion' => $this->configuracion?->toArray(), // si tu dto hijo tiene toArray()
+        'ciudadano' => $this->ciudadano?->toArray(), // igual aquí
+    ];
+}
+
 }

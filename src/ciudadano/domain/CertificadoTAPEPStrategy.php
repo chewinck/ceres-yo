@@ -5,6 +5,9 @@ namespace Src\ciudadano\domain;
 use Src\ciudadano\view\dto\CertificadoDto;
 use Src\ciudadano\domain\CertificadoStrategy;
 use Illuminate\Support\Facades\Log;
+use Src\ciudadano\view\dto\ResponseCertificateDto;
+use Src\ciudadano\domain\GenerarCertificadoInterface;
+use Src\ciudadano\view\dto\GuardarCertificadoResponseDto;
 
 final class CertificadoTAPEPStrategy implements CertificadoStrategy
 {
@@ -21,9 +24,16 @@ final class CertificadoTAPEPStrategy implements CertificadoStrategy
      * @param CertificadoDto $certificadoDto
      * @return string
      */
-    public function generar(GenerarCertificadoInterface $generarCertificado):string
+    public function generar(GenerarCertificadoInterface $generarCertificado):ResponseCertificateDto
     {
         Log::info("Esta es el certificado Automático TAPEP");     
         return $generarCertificado->generarPdf($this->certificadoDto->tipo); 
     }
+
+    public function guardar(RepositoryCertificado $repositoryCertificado): GuardarCertificadoResponseDto
+    {
+        $exito = $this->guardarCertificadoTAPEP();
+        return new GuardarCertificadoResponseDto($exito, null);
+    }
+
 }

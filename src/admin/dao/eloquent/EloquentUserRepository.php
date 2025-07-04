@@ -1,6 +1,6 @@
 <?php
 
-namespace Src\admin\infrastructure;
+namespace Src\admin\dao\eloquent;
 
 
 use Src\admin\domain\User;
@@ -51,6 +51,7 @@ class EloquentUserRepository implements UserRepositoryInterface{
             $ciudadano = $user->ciudadano;
             if ($ciudadano) {
                 $ciudadanoEntity = new Ciudadano();
+                $ciudadanoEntity->setId($ciudadano->id);
                 $ciudadanoEntity->setNumeroIdentificacion($ciudadano->numero_identificacion);
                 $ciudadanoEntity->setNacionalidad($ciudadano->nacionalidad);
                 $ciudadanoEntity->setTipoIdentificacion($ciudadano->tipo_identificacion);

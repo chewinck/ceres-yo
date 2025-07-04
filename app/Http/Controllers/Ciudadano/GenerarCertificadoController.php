@@ -32,10 +32,15 @@ class GenerarCertificadoController extends Controller
         $generarCertificadoUseCase = new GenerarCertificadoUseCase();
         $contenidoPdf= $generarCertificadoUseCase->execute($certificadoDto);
 
-         return response($contenidoPdf)
+        if ($contenidoPdf->getCode() != 200) {
+            return redirect()->back()->withErrors(['tipoCertificado' => $contenidoPdf->getMessage()])->withInput();
+        }
+
+
+         return response($contenidoPdf->getData())
         ->header('Content-Type', 'application/pdf')
         ->header('Content-Disposition', 'inline; filename="certificado.pdf"')
-        ->header('Content-Length', strlen($contenidoPdf));
+        ->header('Content-Length', strlen($contenidoPdf->getData()));
     }
 
     public function solicitar()

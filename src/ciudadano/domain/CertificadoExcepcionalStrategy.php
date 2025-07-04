@@ -4,6 +4,9 @@ namespace Src\Ciudadano\Domain;
 use Src\ciudadano\view\dto\CertificadoDto;
 use Src\ciudadano\domain\CertificadoStrategy;
 use Illuminate\Support\Facades\Log;
+use Src\ciudadano\view\dto\ResponseCertificateDto;
+use Src\ciudadano\view\dto\GuardarCertificadoResponseDto;
+use Src\ciudadano\domain\RepositoryCertificado;
 
 final class CertificadoExcepcionalStrategy implements CertificadoStrategy
 {
@@ -20,26 +23,31 @@ final class CertificadoExcepcionalStrategy implements CertificadoStrategy
      * @param CertificadoDto $certificadoDto
      * @return string
      */
-    public function generar():string
+    public function generar():ResponseCertificateDto
     {
+        Log::info("Generando certificado excepcional de tipo {$this->certificadoDto->tipo} y categoría {$this->certificadoDto->categoria}");
+        
         // Aquí se implementa la lógica para generar el certificado excepcional.
         // Por ejemplo, podrías usar una plantilla y reemplazar los datos necesarios.
+        $resultado = $this->generarCertificadoExcepcional();
         
-        $contenido = "Certificado Excepcional de tipo: {$this->certificadoDto->tipo}\n";
-        $contenido .= "Categoría: {$this->certificadoDto->categoria}\n";
-
-        Log::info("Esta es el certificado Excepcional");            
-        
-        if ($this->certificadoDto->requiereFormulario) {
-            $contenido .= "Requiere formulario.\n";
-        } else {
-            $contenido .= "No requiere formulario.\n";
-        }
-        
-        if ($this->certificadoDto->plantilla) {
-            $contenido .= "Plantilla utilizada: {$this->certificadoDto->plantilla}\n";
-        }
-        
-        return true;
+        return new ResponseCertificateDto($resultado, null);
     }
+
+    public function guardar(RepositoryCertificado $repositoryCertificado): GuardarCertificadoResponseDto
+    {
+        Log::info("Guardando certificado excepcional de tipo {$this->certificadoDto->tipo} y categoría {$this->certificadoDto->categoria}");
+        
+        // Aquí se implementa la lógica para guardar el certificado excepcional.
+        $exito = $this->guardarCertificadoExcepcional();
+        
+        return new GuardarCertificadoResponseDto($exito, null);
+    }
+    {
+        // Implementar la lógica para guardar el certificado si es necesario.
+        // Por ejemplo, podrías guardar en una base de datos o en un sistema de archivos.
+        Log::info("Guardando certificado excepcional de tipo {$this->certificadoDto->tipo} y categoría {$this->certificadoDto->categoria}");
+        return true; // Retornar true si se guarda correctamente, false en caso contrario.
+    }
+
 }
