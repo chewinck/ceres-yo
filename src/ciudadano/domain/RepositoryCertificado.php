@@ -4,6 +4,7 @@ namespace Src\ciudadano\domain;
 
 use Src\ciudadano\view\dto\CertificadoDto;
 use Src\ciudadano\view\dto\GuardarCertificadoResponseDto;
+use Src\ciudadano\view\dto\ResponseCertificateDto;
 
 interface RepositoryCertificado
 {
@@ -20,4 +21,5 @@ interface RepositoryCertificado
      * @return bool
      */
     public function guardarCertificado(CertificadoDto $certificadoDto): GuardarCertificadoResponseDto;
+    public function buscarPorUuid(string $uuid): ?ResponseCertificateDto;
 }

@@ -10,7 +10,7 @@ RUN set -eux; \
     CURRENT_GID=$(getent group www-data | cut -d: -f3); \
     if [ "$GID" != "$CURRENT_GID" ]; then groupmod -g "$GID" www-data || true; usermod -g "$GID" www-data; fi; \
     \
-    # 2) Instala Nginx, Git, PHP-ext y librerías necesarias
+    # 2) Instala dependencias necesarias
     apt-get update && apt-get install -y \
       nginx \
       git \
@@ -24,14 +24,16 @@ RUN set -eux; \
       libzip-dev \
       wkhtmltopdf \
       xvfb \
-      pkg-config && \
-    docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
+      pkg-config \
+      libmagickwand-dev \
+      && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip \
+      && pecl install imagick \
+      && docker-php-ext-enable imagick
 
 # 3) Instala Node.js y Composer
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
  && apt-get install -y nodejs \
  && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
 
 RUN git config --global --add safe.directory /var/www/html
 
@@ -49,6 +51,5 @@ COPY ./docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 # ✅ No se usa USER www-data para permitir que nginx use el puerto 80
-
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 CMD ["php-fpm"]

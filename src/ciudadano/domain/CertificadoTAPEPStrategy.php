@@ -27,13 +27,12 @@ final class CertificadoTAPEPStrategy implements CertificadoStrategy
     public function generar(GenerarCertificadoInterface $generarCertificado):ResponseCertificateDto
     {
         Log::info("Esta es el certificado Automático TAPEP");     
-        return $generarCertificado->generarPdf($this->certificadoDto->tipo); 
+        return $generarCertificado->generarPdf($this->certificadoDto); 
     }
 
     public function guardar(RepositoryCertificado $repositoryCertificado): GuardarCertificadoResponseDto
     {
-        $exito = $this->guardarCertificadoTAPEP();
-        return new GuardarCertificadoResponseDto($exito, null);
+        return  $repositoryCertificado->guardarCertificado($this->certificadoDto);
+    }
     }
 
-}

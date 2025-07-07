@@ -11,6 +11,7 @@ use Src\ciudadano\view\dto\CiudadanoDto;
 use Src\ciudadano\dao\eloquent\EloquentCertificadoRepository;
 use Src\admin\dao\eloquent\EloquentUserRepository;
 use Carbon\Carbon;
+use Src\ciudadano\infrastructure\service\GeneradorQrService;
 use Src\ciudadano\infrastructure\service\UtilService;
 
 
@@ -52,6 +53,7 @@ final class GenerarCertificadoUseCase
             Carbon::now()->translatedFormat('F'),
             Carbon::now()->year,
         );
+
 
         $certificadoDto->ciudadano = $ciudadanoDto;
         $certificadoDto->configuracion = $configBaseCertificadoDto;

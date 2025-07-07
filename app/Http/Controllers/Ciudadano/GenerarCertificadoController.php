@@ -8,6 +8,10 @@ use Src\ciudadano\infrastructure\service\ConfigCertificadoService;
 use Src\ciudadano\view\dto\CertificadoDto;
 use Src\ciudadano\usecase\GenerarCertificadoUseCase;
 use App\Http\Requests\GenerarCertificadoFormRequest;
+use Src\ciudadano\usecase\BuscarCertificadoPorUuiduseCase;
+use Src\ciudadano\dao\eloquent\EloquentCertificadoRepository;
+use Src\ciudadano\infrastructure\service\GenerarCertificadoService;
+use Illuminate\Http\Request;
 
 class GenerarCertificadoController extends Controller
 {
@@ -24,9 +28,10 @@ class GenerarCertificadoController extends Controller
         $certificadoDto = new CertificadoDto(
             tipo: $request->tipoCertificado,
             categoria: $request->categoriaCertificado,
-            requiereFormulario: $configuracionCertificado['requiere_formulario'],
-            plantilla: $configuracionCertificado['plantilla'],
-            documentos: $configuracionCertificado['documentos'],
+            dominio: $request->dominio ?? $request->getHttpHost(),
+            // requiereFormulario: $configuracionCertificado['requiere_formulario'],
+            // plantilla: $configuracionCertificado['plantilla'],
+            // documentos: $configuracionCertificado['documentos'],
         );
 
         $generarCertificadoUseCase = new GenerarCertificadoUseCase();
@@ -46,6 +51,23 @@ class GenerarCertificadoController extends Controller
     public function solicitar()
     {
         return view('certificate.solicitar');
+    }
+
+    public function buscarPorUuid(string $uuid)
+    {
+        $buscarCertificadoPorUuidUseCase = new BuscarCertificadoPorUuiduseCase(
+            new EloquentCertificadoRepository(), new GenerarCertificadoService()
+        );
+
+        $response = $buscarCertificadoPorUuidUseCase->execute($uuid);
+
+        if (!$response->esExitoso()) {
+            return redirect()->back()->withErrors(['uuid' => $response->mensajeError])->withInput();
+        }
+
+        return response($response->contenidoPdf)
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'inline; filename="certificado.pdf"');
     }
 
 }

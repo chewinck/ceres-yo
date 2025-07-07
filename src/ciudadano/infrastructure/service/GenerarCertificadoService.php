@@ -11,27 +11,33 @@ use Carbon\Carbon;
 use Src\ciudadano\domain\GenerarCertificadoInterface;
 use Src\admin\dao\eloquent\EloquentUserRepository;
 use Src\ciudadano\view\dto\ResponseCertificateDto;
+use Src\ciudadano\infrastructure\service\ConfigCertificadoService;
+use Src\ciudadano\infrastructure\service\GeneradorQrService;
 
 class GenerarCertificadoService implements GenerarCertificadoInterface
 {
-
-    private static function getNameTIpoCertificado(string $tipoCertificado): string
-    {
-        $arrayTipoCertificado = [
-            'EVE' => 'Certificados de residencia para fines de Estudio, Vivienda, y Empleo',
-            'PPL' => 'Certificado de residencia para personas Privadas de la libertad',
-            'PEPA' => 'Certificado de residencia para permiso especial - porte y salvoconducto de armas',
-            'TAPEP' => 'Certificado de residencia para trabajo en las áreas de influencia de los proyectos de exploración y explotación petrolera y minera',
-        ];
-        return $arrayTipoCertificado[$tipoCertificado] ?? 'Certificado Desconocido';
-    }   
 
     public function generarPdf(CertificadoDto $certificadoDto): ResponseCertificateDto
 {
     try {
         Carbon::setLocale('es');
 
-        $templatePath = storage_path('app/public/EVE.docx');
+        $configuracionCertificado = ConfigCertificadoService::obtenerConfiguracionCertificado(
+            $certificadoDto->categoria,
+            $certificadoDto->tipo
+        );
+
+        if (is_null($configuracionCertificado) || empty($configuracionCertificado)) {
+            $errorMessage = "Configuración del certificado no encontrada para categoría: {$certificadoDto->categoria}, tipo: {$certificadoDto->tipo}";
+            \Sentry\captureMessage($errorMessage, \Sentry\Severity::fatal());
+            Log::error($errorMessage);
+            return new ResponseCertificateDto(null, $errorMessage, null);
+        }
+
+        // dd($configuracionCertificado);
+
+
+        $templatePath = $configuracionCertificado['plantilla'] ?? null;
         $tempDocPath = storage_path('app/public/temp.docx');
         $firmaPath = storage_path('app/public/firma-test.jpg');
         $imageEncabezado = storage_path('app/public/escudo-yopal-certificado.png');
@@ -39,16 +45,14 @@ class GenerarCertificadoService implements GenerarCertificadoInterface
         if (!file_exists($templatePath)) {
             $errorMessage = "Plantilla DOCX no encontrada: {$templatePath}";
             \Sentry\captureMessage($errorMessage, \Sentry\Severity::fatal());
-            \Log::error($errorMessage);
-            return  new ResponseCertificateDto(null, $errorMessage);
-        }
+            Log::error($errorMessage);
+            return new ResponseCertificateDto(null, $errorMessage, null);        }
 
         if (!file_exists($firmaPath)) {
             $errorMessage = "Firma no encontrada: {$templatePath}";
             \Sentry\captureMessage($errorMessage, \Sentry\Severity::fatal());
-            \Log::error($errorMessage);
-            return  new ResponseCertificateDto(null, $errorMessage);
-        }
+            Log::error($errorMessage);
+            return new ResponseCertificateDto(null, $errorMessage, null);        }
 
         $templateProcessor = new TemplateProcessor($templatePath);
 
@@ -58,7 +62,7 @@ class GenerarCertificadoService implements GenerarCertificadoInterface
             'width' => 60,
             'ratio' => true
         ]);
-        $templateProcessor->setValue('tipoCertificado', self::getNameTIpoCertificado($certificadoDto->tipo));
+        $templateProcessor->setValue('tipoCertificado', $configuracionCertificado['name']);
         $templateProcessor->setValue('codigoComunicacion', $certificadoDto->configuracion->codigoComunicacion);
         $templateProcessor->setValue('numeroCertificado', $certificadoDto->configuracion->uuid);
         $templateProcessor->setValue('numeroDecreto', $certificadoDto->configuracion->numeroDecreto);
@@ -81,7 +85,15 @@ class GenerarCertificadoService implements GenerarCertificadoInterface
         $templateProcessor->setValue('nombreSecretario', 'JORGE ANDRÉS RODRÍGUEZ GONZÁLEZ');
         $templateProcessor->setValue('nombreElaborador', 'Deisy Alfonso');
         $templateProcessor->setValue('cargoElaborador', 'Auxiliar Administrativo');
-
+        $templateProcessor->setImageValue('qr', [
+            'path' => GeneradorQrService::generarQR(
+                $certificadoDto->dominio,
+                $certificadoDto->configuracion->uuid
+            ),
+            'width' => 60,
+            'height' => 60,
+            'ratio' => true,
+        ]);
         $templateProcessor->saveAs($tempDocPath);
 
         // Convertir a HTML
@@ -127,13 +139,13 @@ class GenerarCertificadoService implements GenerarCertificadoInterface
             ->setOption('margin-right', '3cm')
             ->setOption('encoding', 'UTF-8');
 
-      return  new ResponseCertificateDto($pdf->output('certificado_residencia_Yopal.pdf'), null);
+      return  new ResponseCertificateDto(null,$pdf->output('certificado_residencia_Yopal.pdf'), null);
 
     } catch (\Exception $e) {
-        $errorMessage = "Ha ocurrido un error al generar el certificado. Por favor, intente más tarde. Detalles: " . $e->getMessage();
+        $errorMessage = "Ha ocurrido un error al generar el certificado. Por favor, intente más tarde. Detalles: " . $e;
         \Sentry\captureMessage($errorMessage, \Sentry\Severity::fatal());
-        \Log::error($errorMessage);
-        return  new ResponseCertificateDto(null, $errorMessage);
+        Log::error($errorMessage);
+        return  new ResponseCertificateDto(null,null, $errorMessage);
     }
 }
 

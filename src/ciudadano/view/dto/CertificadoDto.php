@@ -7,9 +7,10 @@ class CertificadoDto
     public function __construct(
         public string $tipo,
         public string $categoria,
-        public bool $requiereFormulario,
-        public ?string $plantilla = null,
-        public  $documentos = null,
+        public string $dominio,
+        // public bool $requiereFormulario,
+        // public ?string $plantilla = null,
+        // public  $documentos = null,
         public ?ConfigBaseCertificadoDto $configuracion = null,
         public ?CiudadanoDto $ciudadano = null
 
@@ -20,9 +21,10 @@ class CertificadoDto
     return [
         'tipo' => $this->tipo,
         'categoria' => $this->categoria,
-        'requiereFormulario' => $this->requiereFormulario,
-        'plantilla' => $this->plantilla,
-        'documentos' => $this->documentos,
+        'dominio' => $this->dominio,
+        // 'requiereFormulario' => $this->requiereFormulario,
+        // 'plantilla' => $this->plantilla,
+        // 'documentos' => $this->documentos,
         'configuracion' => $this->configuracion?->toArray(), // si tu dto hijo tiene toArray()
         'ciudadano' => $this->ciudadano?->toArray(), // igual aquí
     ];
