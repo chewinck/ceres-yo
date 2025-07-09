@@ -29,7 +29,7 @@ Route::get('/users', [UserController::class, 'index'])->name('users.index');
   ->name('certificado.solicitar');
   Route::get('/certificado/{uuid}', [GenerarCertificadoController::class, 'buscarPorUuid'])
   ->name('certificado.buscarPorUuid');
-Route::post('/certificado/generar', [GenerarCertificadoController::class, 'generar'])
+Route::post('/certificado', [GenerarCertificadoController::class, 'generar'])
 ->name('certificado.generar');
 
 require __DIR__.'/auth.php';

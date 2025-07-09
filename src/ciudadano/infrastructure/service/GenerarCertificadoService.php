@@ -22,6 +22,8 @@ class GenerarCertificadoService implements GenerarCertificadoInterface
     try {
         Carbon::setLocale('es');
 
+       
+
         $configuracionCertificado = ConfigCertificadoService::obtenerConfiguracionCertificado(
             $certificadoDto->categoria,
             $certificadoDto->tipo
