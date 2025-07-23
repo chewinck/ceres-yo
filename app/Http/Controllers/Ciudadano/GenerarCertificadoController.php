@@ -12,6 +12,7 @@ use Src\ciudadano\usecase\BuscarCertificadoPorUuiduseCase;
 use Src\ciudadano\dao\eloquent\EloquentCertificadoRepository;
 use Src\ciudadano\infrastructure\service\GenerarCertificadoService;
 use Illuminate\Http\Request;
+use Src\ciudadano\view\dto\PPLDto;
 
 class GenerarCertificadoController extends Controller
 {
@@ -20,18 +21,23 @@ class GenerarCertificadoController extends Controller
     {
         // $inputs = $request->validated();
 
-        $configuracionCertificado = ConfigCertificadoService::obtenerConfiguracionCertificado(
-            $request->categoriaCertificado,
-            $request->tipoCertificado
-        );
+        $pplDto = null;
+
+        if ($request->tipoCertificado == 'PPL'){
+            $pplDto =  new PPLDto(
+                nombrePPL: $request->nombrePPL ?? '',
+                tipoDocumentoPPL: $request->tipoDocumentoPPL ?? '',
+                numeroDocumentoPPL: $request->numeroDocumentoPPL ?? '',
+                numeroExpedientePPL: $request->numeroExpedientePPL ?? '',
+                nombreJuzgado: $request->nombreJuzgado ?? ''
+            );
+        }
 
         $certificadoDto = new CertificadoDto(
             tipo: $request->tipoCertificado,
             categoria: $request->categoriaCertificado,
             dominio: $request->dominio ?? $request->getHttpHost(),
-            // requiereFormulario: $configuracionCertificado['requiere_formulario'],
-            // plantilla: $configuracionCertificado['plantilla'],
-            // documentos: $configuracionCertificado['documentos'],
+            ppl: $pplDto,
         );
 
         $generarCertificadoUseCase = new GenerarCertificadoUseCase();
