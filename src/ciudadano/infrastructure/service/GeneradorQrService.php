@@ -18,7 +18,7 @@ class GeneradorQrService
     
         // 1. Generar la imagen QR (binario PNG)
         $qrBinary = QrCode::format('png')      // Salida PNG
-            ->size(100)                        // 100 px
+            ->size(70)                        // 100 px
             ->errorCorrection('H')             // Nivel de corrección (opcional)
             ->eye('circle')                    // Estilo visual (opcional, v4 lo soporta)
             ->generate($urlConUuid);           // Contenido
@@ -29,7 +29,7 @@ class GeneradorQrService
         // file_put_contents($path, $qrBinary);
         file_put_contents($tempPath, $qrBinary);
     
-        return $tempPath;                      // Ruta que luego usarás en setImageValue
+        return $tempPath;                     
     }
 
 }

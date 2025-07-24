@@ -21,4 +21,12 @@ class UtilService
     {
         return (string) Str::uuid();
     }
+
+    public static function eliminarParrafosConSoloImagen($html) {
+        return preg_replace(
+            '/<p[^>]*>\s*(<img[^>]+>)\s*<\/p>/i',
+            '$1',
+            $html
+        );
+    }
 }

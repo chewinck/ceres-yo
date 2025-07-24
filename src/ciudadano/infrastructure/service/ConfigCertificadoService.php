@@ -24,29 +24,29 @@ class ConfigCertificadoService
                 'automatica' => [
                     'tipos' => [
                         'EVE' => [
-                            'name' => 'Certificado de residencia para fines de Estudio, Vivienda, y Empleo',
+                            'name' => 'CERTIFICADO DE RESIDENCIA PARA FINES DE ESTUDIO, VIVIENDA Y EMPLEO',
                             'requiere_formulario' => false,
-                            'plantilla' => storage_path('app/public/EVE.docx'),
+                            'plantilla' => storage_path('app/private/EVE-Automatico.docx'),
                             'documentos'=> null,
                         ],
                         'PPL' => [
-                            'name' => 'Certificado de residencia para personas Privadas de la Libertad',
+                            'name' => 'CERTIFICADO DE RESIDENCIA PARA PERSONAS PRIVADAS DE LA LIBERTAD',
                             'requiere_formulario' => true,
-                            'plantilla' => storage_path('app/public/PPLA.docx'),
+                            'plantilla' => storage_path('app/private/PPL-Automatico.docx'),
                             'documentos'=> ['documento PPL'],
 
                         ],
                         'PEPA' => [
-                            'name' => 'Certificado de residencia para permiso especial - porte y salvoconducto de armas',
+                            'name' => 'CERTIFICADO DE RESIDENCIA PARA PERMISO ESPECIAL - PORTE Y SALVOCONDUCTO DE ARMAS',
                             'requiere_formulario' => false,
-                            'plantilla' => storage_path('app/public/EVE.docx'),
+                            'plantilla' => storage_path('app/private/PEPA-Automatico.docx'),
                             'documentos'=> null,
 
                         ],
                         'TAPEP' => [
-                            'name' => 'Certificado de residencia para trabajo en las áreas de influencia de los proyectos de exploración y explotación petrolera y minera',
+                            'name' => 'CERTIFICADO DE RESIDENCIA PARA TRABAJO EN LAS ÁREAS DE INFLUENCIA DE LOS PROYECTOS DE EXPLORACIÓN Y EXPLOTACIÓN PETROLERA Y MINERA',
                             'requiere_formulario' => false,
-                            'plantilla' => storage_path('app/public/EVE.docx'),
+                            'plantilla' => storage_path('app/private/TAPEP-Automatico.docx'),
                             'documentos'=> null,
 
                         ],
@@ -56,7 +56,7 @@ class ConfigCertificadoService
                     'tipos' => [
                         'EVE' => [
                             'name' => 'Certificado de residencia para fines de Estudio, Vivienda, y Empleo',                            'requiere_formulario' => false,
-                            'plantilla' => storage_path('app/public/comunExcepcional.docx'),
+                            'plantilla' => storage_path('app/private/EVE-Excepcional.docx'),
                             'documentos'=> ['Certificado de la junta de acción comunal',
                             'Certificado de estudio', 'Certificado de afiliación a EPS',
                             'Certificado Laboral'],
@@ -65,7 +65,7 @@ class ConfigCertificadoService
                         'PPL' => [
                             'name' => 'Certificado de residencia para personas Privadas de la Libertad',
                             'requiere_formulario' => true,
-                            'plantilla' => storage_path('app/public/pplExcepcional.docx'),
+                            'plantilla' => storage_path('app/private/pplExcepcional.docx'),
                             'documentos'=> ['Certificado de la junta de acción comunal',
                             'Certificado de estudio', 'Certificado de afiliación a EPS',
                             'Certificado Laboral'],
@@ -73,7 +73,7 @@ class ConfigCertificadoService
                         'PEPA' => [
                             'name' => 'Certificado de residencia para permiso especial - porte y salvoconducto de armas',
                             'requiere_formulario' => false,
-                            'plantilla' => storage_path('app/public/comunExcepcional.docx'),
+                            'plantilla' => storage_path('app/private/comunExcepcional.docx'),
                             'documentos'=> ['Certificado de la junta de acción comunal',
                             'Certificado de estudio', 'Certificado de afiliación a EPS',
                             'Certificado Laboral'],
@@ -81,7 +81,7 @@ class ConfigCertificadoService
                         'TAPEP' => [
                             'name' => 'Certificado de residencia para trabajo en las áreas de influencia de los proyectos de exploración y explotación petrolera y minera',
                             'requiere_formulario' => false,
-                            'plantilla' => storage_path('app/public/comunExcepcional.docx'),
+                            'plantilla' => storage_path('app/private/comunExcepcional.docx'),
                             'documentos'=> ['Certificado de afiliación a la junta de acción comunal'],
                         ],
                     ],
