@@ -1,5 +1,5 @@
 <div class="flex items-center space-x-2">
-    <img src="{{ asset('storage/escudo-yopal-grande.webp') }}"
+    <img src="{{ asset('storage/escudo-yopal-certificado.png') }}"
          alt="Escudo Yopal"
-         class="w-9 h-9 object-contain" />
+         class="w-16 h-16 object-contain" />
 </div>

@@ -43,8 +43,8 @@ final class GenerarCertificadoUseCase
 
         $configBaseCertificadoDto = new ConfigBaseCertificadoDto(
             UtilService::generateUniqueId(),
-            "123456",
-            "1708-2025",
+            "XXXXX",
+            "XXXXXX",
             "firmaSecretario",
             "Nombre Secretario",
             "Nombre Elaborador",
@@ -53,6 +53,7 @@ final class GenerarCertificadoUseCase
             Carbon::now()->translatedFormat('F'),
             Carbon::now()->year,
         );
+        
 
 
         $certificadoDto->ciudadano = $ciudadanoDto;

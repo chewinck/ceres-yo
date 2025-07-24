@@ -2,7 +2,7 @@
     <div class="flex flex-col sm:justify-center items-center pt-4 sm:pt-0">
         <div class="max-w-md mx-auto bg-white sm:rounded-lg px-6 py-4">
             <div>
-                <img src="{{ asset('storage/escudo-yopal.jpg') }}" alt="Escudo de Yopal" class="w-32 h-auto mx-auto">
+                <img src="{{ asset('storage/escudo-yopal-certificado.png') }}" alt="Escudo de Yopal" class="w-32 h-auto mx-auto">
             </div>
             <div class="flex flex-col items-center mb-6">
                 <h1
