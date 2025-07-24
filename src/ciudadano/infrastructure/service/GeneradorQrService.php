@@ -29,7 +29,7 @@ class GeneradorQrService
         // file_put_contents($path, $qrBinary);
         file_put_contents($tempPath, $qrBinary);
     
-        return $tempPath;                      // Ruta que luego usarás en setImageValue
+        return $tempPath;                     
     }
 
 }

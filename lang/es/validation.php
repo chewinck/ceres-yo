@@ -150,7 +150,7 @@ return [
     'timezone'               => 'El campo :attribute debe ser una zona horaria válida.',
     'ulid'                   => 'El campo :attribute debe ser un ULID válido.',
     'unique'                 => 'El campo :attribute ya ha sido registrado.',
-    'uploaded'               => 'Subir :attribute ha fallado.',
+    'uploaded'               => 'El archivo :attribute no pudo subirse. Verifica el tamaño máximo permitido.',
     'uppercase'              => 'El campo :attribute debe estar en mayúscula.',
     'url'                    => 'El campo :attribute debe ser una URL válida.',
     'uuid'                   => 'El campo :attribute debe ser un UUID válido.',

@@ -22,8 +22,6 @@ class GenerarCertificadoService implements GenerarCertificadoInterface
     try {
         Carbon::setLocale('es');
 
-       
-
         $configuracionCertificado = ConfigCertificadoService::obtenerConfiguracionCertificado(
             $certificadoDto->categoria,
             $certificadoDto->tipo
@@ -40,7 +38,7 @@ class GenerarCertificadoService implements GenerarCertificadoInterface
 
 
         $templatePath = $configuracionCertificado['plantilla'] ?? null;
-        $tempDocPath = storage_path('app/public/temp.docx');
+        $tempDocPath = storage_path('app/private/temp.docx');
         $firmaPath = storage_path('app/public/firma-test.png');
         $imageEncabezado = storage_path('app/public/escudo-yopal-certificado-small.png');
         $banderaPath = storage_path('app/public/linea-bandera-amy.png');

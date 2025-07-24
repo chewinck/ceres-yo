@@ -59,8 +59,12 @@ class GenerarCertificadoController extends Controller
         return view('certificate.solicitar');
     }
 
-    public function buscarPorUuid(string $uuid)
+    public function buscarPorUuid(Request $request , string $uuid)
     {
+        $request->merge(['uuid' => $uuid]);
+        $request->validate([
+            'uuid' => ['required', 'string', 'regex:/^[a-zA-Z0-9\-]+$/'],
+        ]);
         $buscarCertificadoPorUuidUseCase = new BuscarCertificadoPorUuiduseCase(
             new EloquentCertificadoRepository(), new GenerarCertificadoService()
         );

@@ -30,6 +30,10 @@ RUN set -eux; \
       && pecl install imagick \
       && docker-php-ext-enable imagick
 
+# Configura tamaño máximo de archivos
+RUN echo "upload_max_filesize=10M" > /usr/local/etc/php/conf.d/uploads.ini \
+ && echo "post_max_size=12M" >> /usr/local/etc/php/conf.d/uploads.ini
+
 # 3) Instala Node.js y Composer
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
  && apt-get install -y nodejs \
